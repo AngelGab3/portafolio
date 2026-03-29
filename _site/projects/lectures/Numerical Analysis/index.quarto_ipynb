@@ -1,0 +1,88 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Mi primer análisis\"\n",
+        "description: \"Exploración de datos con pandas y Plotly\"\n",
+        "date: 2025-01-15\n",
+        "categories: [python, pandas, plotly]\n",
+        "image: preview.png\n",
+        "---\n",
+        "\n",
+        "## Introducción\n",
+        "\n",
+        "Este es mi primer análisis publicado en mi portafolio.\n",
+        "\n",
+        "## Datos"
+      ],
+      "id": "20297cb9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "import plotly.express as px\n",
+        "\n",
+        "df = pd.DataFrame({\n",
+        "    \"mes\": [\"Ene\", \"Feb\", \"Mar\", \"Abr\", \"May\"],\n",
+        "    \"ventas\": [120, 145, 98, 160, 175]\n",
+        "})\n",
+        "\n",
+        "df"
+      ],
+      "id": "a73b4317",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Visualización"
+      ],
+      "id": "9e8977fc"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "fig = px.bar(\n",
+        "    df,\n",
+        "    x=\"mes\",\n",
+        "    y=\"ventas\",\n",
+        "    title=\"Ventas por mes\",\n",
+        "    color=\"ventas\",\n",
+        "    color_continuous_scale=\"Blues\"\n",
+        ")\n",
+        "fig.show()"
+      ],
+      "id": "2d30eb49",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Conclusión\n",
+        "\n",
+        "Las ventas muestran una tendencia positiva con un ligero bache en marzo."
+      ],
+      "id": "6f5b0fdf"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/opt/miniconda3/envs/porta/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

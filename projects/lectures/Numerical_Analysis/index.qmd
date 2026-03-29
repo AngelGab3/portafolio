@@ -1,0 +1,10 @@
+---
+title: "Numerical Analysis"
+description: "Numerical Methods implemented in Python"
+image: numerical_analysis.png
+listing:
+  contents: "*/index.qmd"
+  type: grid
+  sort: "date desc"
+  image-height: 200px
+---

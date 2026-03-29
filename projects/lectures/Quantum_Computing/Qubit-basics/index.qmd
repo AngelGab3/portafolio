@@ -1,0 +1,10 @@
+---
+title: "Quantum Computing"
+description: "Fundamentos y circuitos cuánticos"
+image: preview.png
+listing:
+  contents: "*/index.qmd"
+  type: grid
+  sort: "date desc"
+  image-height: 200px
+---

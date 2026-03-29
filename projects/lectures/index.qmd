@@ -1,0 +1,11 @@
+---
+title: "Undergraduate Lectures"
+description: "Notes y projects from my courses"
+image: preview.png
+listing:
+  contents:
+    - path: Numerical_Analysis/index.qmd
+    - path: Quantum_Computing/index.qmd
+  type: grid
+  image-height: 200px
+---

@@ -1,0 +1,36 @@
+---
+title: "Mis Proyectos"
+listing:
+  - id: datos
+    contents: lectures/datos
+    type: grid
+    sort: "date desc"
+    image-height: 200px
+
+  - id: ml
+    contents: lectures/machine-learning
+    type: grid
+    sort: "date desc"
+    image-height: 200px
+
+  - id: viz
+    contents: lectures/visualizacion
+    type: grid
+    sort: "date desc"
+    image-height: 200px
+---
+
+## 📊 Análisis de Datos
+
+:::{#datos}
+:::
+
+## 🤖 Machine Learning
+
+:::{#ml}
+:::
+
+## 📈 Visualización
+
+:::{#viz}
+:::

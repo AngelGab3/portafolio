@@ -1,0 +1,35 @@
+{
+  "proyectos.qmd": {
+    "proyectos.html": "7f2eaf28"
+  },
+  "index.qmd": {
+    "index.html": "09a79b54"
+  },
+  "about.qmd": {
+    "about.html": "2b2b8977"
+  },
+  "lectures/analysis_ejemplo/index.qmd": {
+    "index.html": "f5a34ac6"
+  },
+  "lectures/datos/analisis-ejemplo/index.qmd": {
+    "index.html": "cb83e93e"
+  },
+  "projects/lectures/Numerical Analysis/index.qmd": {
+    "index.html": "f176a50b"
+  },
+  "projects/lectures/Numerical_Analysis/index.qmd": {
+    "index.html": "a3c31b7f"
+  },
+  "projects/lectures/index.qmd": {
+    "index.html": "2ed8de59"
+  },
+  "projects/lectures/Quantum_Computing/index.qmd": {
+    "index.html": "0cff7425"
+  },
+  "projects/lectures/Numerical_Analysis/searching_methods/index.qmd": {
+    "index.html": "b212d02a"
+  },
+  "projects/lectures/Quantum_Computing/Qubit-basics/index.qmd": {
+    "index.html": "7d155fcb"
+  }
+}

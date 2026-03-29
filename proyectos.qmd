@@ -1,0 +1,34 @@
+---
+title: "My Projects"
+listing:
+  - id: lectures
+    contents: "projects/lectures/index.qmd"
+    type: grid
+    sort: "date desc"
+    image-height: 200px
+
+  - id: ml
+    contents: "projects/machine-learning/**"
+    type: grid
+    sort: "date desc"
+    image-height: 200px
+
+  - id: viz
+    contents: "projects/visualizacion/**"
+    type: grid
+    sort: "date desc"
+    image-height: 200px
+---
+## Lectures
+:::{#lectures}
+:::
+
+## Artificial Intelligence
+:::{#ml}
+:::
+
+## Computational Physics
+:::{#viz}
+:::
+
+---

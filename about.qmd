@@ -1,0 +1,88 @@
+---
+title: "About Me"
+page-layout: full
+---
+
+:::: {.columns}
+
+::: {.column width="40%"}
+![](assets/yo.jpg){width=280px style="border-radius: 50%; box-shadow: 0 4px 16px rgba(0,0,0,0.15);"}
+
+:::
+
+::: {.column width="60%"}
+
+## Gabriel Velázquez
+
+I am currently pursuing a bachelor's degree in physics. I have a strong interest in and focus on quantum computing, artificial intelligence, and computational physics.
+
+### Contacto
+
+- angelxdmv123@gmail.com (personal)
+- angel.munguiavz@udlap.mx (institutional)
+- [GitHub](https://github.com/AngelGab3)
+- [LinkedIn](https://www.linkedin.com/in/%C3%A1ngel-gabriel-mungu%C3%ADa-vel%C3%A1zquez-53806930a/)
+
+:::
+
+::::
+
+---
+
+## Experience
+
+| Empresa | Rol | Período |
+|---|---|---|
+| Empresa A | Nada | fechas |
+| Empresa B | Nada | fecha |
+
+---
+
+## Education
+
+Bachillerato 5 de mayo | 2021 - 2024
+
+Programa del Diploma (DP) del Bachillerato Internacional (IB) | 2022 - 2024
+
+Licenciatura en Física | Universidad de las Américas Puebla | 2024 - 2028
+
+---
+
+## Tools I like to use
+
+::: {.grid}
+
+::: {.g-col-3}
+**Lenguajes**
+- Python
+- Swift
+- Matlab
+- C
+:::
+
+::: {.g-col-3}
+**Libraries**
+- Pandas
+- Plotly
+- Scikit-learn
+- Tensor Flow
+- Numpy
+- Quskit
+:::
+
+::: {.g-col-3}
+**Tools**
+- Quarto
+- Git
+- Jupyter Notebooks
+- Symulink
+- Pycharm
+:::
+
+::: {.g-col-3}
+**Others**
+- XD
+- Xd
+:::
+
+:::
