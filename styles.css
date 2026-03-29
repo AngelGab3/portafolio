@@ -1,0 +1,87 @@
+/* ─── Fuentes ─────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* ─── Navbar ──────────────────────────────────────── */
+.navbar {
+  border-bottom: 2px solid #4e79a7;
+  padding: 0.8rem 1rem;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: -0.5px;
+}
+
+/* ─── Página de inicio ────────────────────────────── */
+h1.title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+/* ─── Botones ─────────────────────────────────────── */
+.btn-primary {
+  background-color: #4e79a7;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #2f5580;
+}
+
+.btn-outline-secondary {
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+}
+
+/* ─── Cards de proyectos ──────────────────────────── */
+.quarto-grid-item {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quarto-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+/* ─── Tabla en about.qmd ──────────────────────────── */
+table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+thead {
+  background-color: #4e79a7;
+  color: white;
+}
+
+/* ─── Footer ──────────────────────────────────────── */
+.nav-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+/* ─── Modo oscuro ─────────────────────────────────── */
+[data-bs-theme="dark"] .quarto-grid-item {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+[data-bs-theme="dark"] thead {
+  background-color: #2f5580;
+}
