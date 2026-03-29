@@ -1,33 +1,9 @@
 {
   "listingMap": {
     "proyectos.qmd": [
-      "posts",
-      "lectures",
-      "lectures/datos",
-      "lectures/machine-learning",
-      "lectures/visualizacion",
-      "projects/datos",
-      "projects/machine-learning",
-      "projects/visualizacion",
-      "projects/lectures",
-      "projects/lectures/**",
-      "projects/lectures/Numerical Analysis",
-      "projects/lectures/Quantum Computing",
-      "projects/lectures/Numerical_Analysis",
-      "projects/lectures/Quantum_Computing",
       "projects/lectures/index.qmd",
       "projects/machine-learning/**",
       "projects/visualizacion/**"
-    ],
-    "projects/lectures/index.qmd": [
-      "numerical-analysis",
-      "quantum-computing",
-      "numerical_analysis",
-      "quantum_computing",
-      "Numerical_Analysis",
-      "Quantum_Computing",
-      "projects/lectures/Numerical_Analysis/index.qmd",
-      "projects/lectures/Quantum_Computing/index.qmd"
     ],
     "projects/lectures/Numerical_Analysis/index.qmd": [
       "*/index.qmd"

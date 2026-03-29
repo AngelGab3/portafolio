@@ -1,14 +1,12 @@
 [
   {
-    "listing": "/proyectos.html",
-    "items": [
-      "/projects/lectures/index.html"
-    ]
+    "listing": "/projects/lectures/Quantum_Computing/Qubit-basics/index.html",
+    "items": []
   },
   {
-    "listing": "/projects/lectures/Quantum_Computing/index.html",
+    "listing": "/projects/lectures/Numerical_Analysis/index.html",
     "items": [
-      "/projects/lectures/Quantum_Computing/Qubit-basics/index.html"
+      "/projects/lectures/Numerical_Analysis/searching_methods/index.html"
     ]
   },
   {
@@ -19,13 +17,15 @@
     ]
   },
   {
-    "listing": "/projects/lectures/Numerical_Analysis/index.html",
+    "listing": "/proyectos.html",
     "items": [
-      "/projects/lectures/Numerical_Analysis/searching_methods/index.html"
+      "/projects/lectures/index.html"
     ]
   },
   {
-    "listing": "/projects/lectures/Quantum_Computing/Qubit-basics/index.html",
-    "items": []
+    "listing": "/projects/lectures/Quantum_Computing/index.html",
+    "items": [
+      "/projects/lectures/Quantum_Computing/Qubit-basics/index.html"
+    ]
   }
 ]

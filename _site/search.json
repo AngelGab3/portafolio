@@ -1,157 +1,10 @@
 [
   {
-    "objectID": "proyectos.html",
-    "href": "proyectos.html",
-    "title": "My Projects",
-    "section": "",
-    "text": "Notes y projects from my courses\n\n\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "lectures/analysis_ejemplo/index.html",
-    "href": "lectures/analysis_ejemplo/index.html",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "lectures/analysis_ejemplo/index.html#introducción",
-    "href": "lectures/analysis_ejemplo/index.html#introducción",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "lectures/analysis_ejemplo/index.html#datos",
-    "href": "lectures/analysis_ejemplo/index.html#datos",
-    "title": "Mi primer análisis",
-    "section": "Datos",
-    "text": "Datos\n\nimport pandas as pd\nimport plotly.express as px\n\ndf = pd.DataFrame({\n    \"mes\": [\"Ene\", \"Feb\", \"Mar\", \"Abr\", \"May\"],\n    \"ventas\": [120, 145, 98, 160, 175]\n})\n\ndf\n\n\n\n\n\n\n\n\nmes\nventas\n\n\n\n\n0\nEne\n120\n\n\n1\nFeb\n145\n\n\n2\nMar\n98\n\n\n3\nAbr\n160\n\n\n4\nMay\n175"
-  },
-  {
-    "objectID": "lectures/analysis_ejemplo/index.html#visualización",
-    "href": "lectures/analysis_ejemplo/index.html#visualización",
-    "title": "Mi primer análisis",
-    "section": "Visualización",
-    "text": "Visualización\n\nfig = px.bar(\n    df,\n    x=\"mes\",\n    y=\"ventas\",\n    title=\"Ventas por mes\",\n    color=\"ventas\",\n    color_continuous_scale=\"Blues\"\n)\nfig.show()"
-  },
-  {
-    "objectID": "lectures/analysis_ejemplo/index.html#conclusión",
-    "href": "lectures/analysis_ejemplo/index.html#conclusión",
-    "title": "Mi primer análisis",
-    "section": "Conclusión",
-    "text": "Conclusión\nLas ventas muestran una tendencia positiva con un ligero bache en marzo."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "My Portfolio",
-    "section": "",
-    "text": "I really like to see how computers can helps us to improve our understanding of the world\nPrincipally I work with Python, Pandas, y Tensor Flow.\nHere you will find some materials from lectures I have given, personal projects and learnings.\nIf you have and doubt, feel free to send me an email.\nSee my projects About me"
-  },
-  {
-    "objectID": "index.html#sobre-mí",
-    "href": "index.html#sobre-mí",
-    "title": "Hola, soy Tu Nombre 👋",
-    "section": "",
-    "text": "Soy un analista de datos apasionado por convertir números en historias. Trabajo principalmente con Python, pandas y Plotly.\nAquí encontrarás mis proyectos, análisis y aprendizajes.\nVer mis proyectos Acerca de mí"
-  },
-  {
-    "objectID": "index.html#habilidades",
-    "href": "index.html#habilidades",
-    "title": "My Portfolio",
-    "section": "Habilidades",
-    "text": "Habilidades\n\n\n🐍 Python\nPandas, NumPy, Scikit-learn\n\n\n📊 Visualización\nPlotly, Matplotlib, Seaborn\n\n\n🌐 Publicación\nQuarto, GitHub Pages"
-  },
-  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About Me",
     "section": "",
     "text": "I am currently pursuing a bachelor’s degree in physics. I have a strong interest in and focus on quantum computing, artificial intelligence, and computational physics.\n\n\n\nangelxdmv123@gmail.com (personal)\nangel.munguiavz@udlap.mx (institutional)\nGitHub\nLinkedIn"
-  },
-  {
-    "objectID": "about.html#tu-nombre",
-    "href": "about.html#tu-nombre",
-    "title": "Acerca de mí",
-    "section": "",
-    "text": "Soy analista de datos con experiencia en Python y visualización de datos. Me apasiona encontrar patrones en los datos y comunicarlos de forma clara.\n\n\n\n✉️ tucorreo@email.com\n🐙 GitHub\n💼 LinkedIn"
-  },
-  {
-    "objectID": "about.html#experiencia",
-    "href": "about.html#experiencia",
-    "title": "About Me",
-    "section": "Experiencia",
-    "text": "Experiencia\n\n\n\nEmpresa\nRol\nPeríodo\n\n\n\n\nEmpresa A\nNada\nfechas\n\n\nEmpresa B\nNada\nfecha"
-  },
-  {
-    "objectID": "about.html#educación",
-    "href": "about.html#educación",
-    "title": "About Me",
-    "section": "Educación",
-    "text": "Educación\nBachillerato 5 de mayo | 2021 - 2024\nPrograma del Diploma (DP) del Bachillerato Internacional (IB) | 2022 - 2024\nLicenciatura en Física | Universidad de las Américas Puebla | 2024 - 2028"
-  },
-  {
-    "objectID": "about.html#herramientas-que-uso",
-    "href": "about.html#herramientas-que-uso",
-    "title": "About Me",
-    "section": "Herramientas que uso",
-    "text": "Herramientas que uso\n\n\nLenguajes - Python - Swift - Matlab - C\n\n\nLibrerías - Pandas - Plotly - Scikit-learn - Tensor Flow - Numpy - Quskit\n\n\nHerramientas - Quarto - Git - Jupyter Notebooks - Symulink - Pycharm\n\n\nOtros - XD - Xd"
-  },
-  {
-    "objectID": "lectures/datos/analisis-ejemplo/index.html",
-    "href": "lectures/datos/analisis-ejemplo/index.html",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "lectures/datos/analisis-ejemplo/index.html#introducción",
-    "href": "lectures/datos/analisis-ejemplo/index.html#introducción",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "lectures/datos/analisis-ejemplo/index.html#datos",
-    "href": "lectures/datos/analisis-ejemplo/index.html#datos",
-    "title": "Mi primer análisis",
-    "section": "Datos",
-    "text": "Datos\n\nimport pandas as pd\nimport plotly.express as px\n\ndf = pd.DataFrame({\n    \"mes\": [\"Ene\", \"Feb\", \"Mar\", \"Abr\", \"May\"],\n    \"ventas\": [120, 145, 98, 160, 175]\n})\n\ndf\n\n\n\n\n\n\n\n\nmes\nventas\n\n\n\n\n0\nEne\n120\n\n\n1\nFeb\n145\n\n\n2\nMar\n98\n\n\n3\nAbr\n160\n\n\n4\nMay\n175"
-  },
-  {
-    "objectID": "lectures/datos/analisis-ejemplo/index.html#visualización",
-    "href": "lectures/datos/analisis-ejemplo/index.html#visualización",
-    "title": "Mi primer análisis",
-    "section": "Visualización",
-    "text": "Visualización\n\nfig = px.bar(\n    df,\n    x=\"mes\",\n    y=\"ventas\",\n    title=\"Ventas por mes\",\n    color=\"ventas\",\n    color_continuous_scale=\"Blues\"\n)\nfig.show()"
-  },
-  {
-    "objectID": "lectures/datos/analisis-ejemplo/index.html#conclusión",
-    "href": "lectures/datos/analisis-ejemplo/index.html#conclusión",
-    "title": "Mi primer análisis",
-    "section": "Conclusión",
-    "text": "Conclusión\nLas ventas muestran una tendencia positiva con un ligero bache en marzo."
-  },
-  {
-    "objectID": "proyectos.html#análisis-de-datos",
-    "href": "proyectos.html#análisis-de-datos",
-    "title": "Mis Proyectos",
-    "section": "",
-    "text": "Exploración de datos con pandas y Plotly\n\n\n\n\n\n\nJan 15, 2025\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "proyectos.html#machine-learning",
-    "href": "proyectos.html#machine-learning",
-    "title": "My projects",
-    "section": "🤖 Machine Learning",
-    "text": "🤖 Machine Learning\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "proyectos.html#visualización",
-    "href": "proyectos.html#visualización",
-    "title": "My projects",
-    "section": "Visualización",
-    "text": "Visualización\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html#gabriel-velázquez",
@@ -161,46 +14,11 @@
     "text": "I am currently pursuing a bachelor’s degree in physics. I have a strong interest in and focus on quantum computing, artificial intelligence, and computational physics.\n\n\n\nangelxdmv123@gmail.com (personal)\nangel.munguiavz@udlap.mx (institutional)\nGitHub\nLinkedIn"
   },
   {
-    "objectID": "index.html#welcome",
-    "href": "index.html#welcome",
-    "title": "My Portfolio",
-    "section": "",
-    "text": "I really like to see how computers can helps us to improve our understanding of the world\nPrincipally I work with Python, Pandas, y Tensor Flow.\nHere you will find some materials from lectures I have given, personal projects and learnings.\nIf you have and doubt, feel free to send me an email.\nSee my projects About me"
-  },
-  {
-    "objectID": "index.html#habilities",
-    "href": "index.html#habilities",
-    "title": "My Portfolio",
-    "section": "Habilities",
-    "text": "Habilities\n\n\nPython\nPandas, NumPy, Scikit-learn, Tensor Flow, Qskit\n\n\nVisualization\nPlotly, Matplotlib, Seaborn\n\n\nPublicación\nQuarto, GitHub Pages"
-  },
-  {
-    "objectID": "index.html#habilities-1",
-    "href": "index.html#habilities-1",
-    "title": "My Portfolio",
-    "section": "Habilities",
-    "text": "Habilities"
-  },
-  {
-    "objectID": "index.html#revelant-subjects",
-    "href": "index.html#revelant-subjects",
-    "title": "My Portfolio",
-    "section": "Revelant Subjects",
-    "text": "Revelant Subjects\n\nModern Physics, Matrix Theory, Numerical Analysis, Analytic Geometry, Mathematical Analysis I, Ordinary Differential Equations, Calculus I and II, General Chemistry, Stadistic and Probabilístic and stadistic."
-  },
-  {
-    "objectID": "index.html#topics",
-    "href": "index.html#topics",
-    "title": "My Portfolio",
-    "section": "Topics",
-    "text": "Topics\n\nModern Physics, Quantum Mechanics, Quantum Computing, Machine Learning, Deep Learning, Control Systems, Linear Algebra, Numerical Analysis."
-  },
-  {
-    "objectID": "index.html#topics-covered",
-    "href": "index.html#topics-covered",
-    "title": "My Portfolio",
-    "section": "Topics Covered",
-    "text": "Topics Covered\n\nModern Physics, Quantum Mechanics, Quantum Computing, Machine Learning, Deep Learning, Control Systems, Linear Algebra, Numerical Analysis."
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "About Me",
+    "section": "Experience",
+    "text": "Experience\n\n\n\nEmpresa\nRol\nPeríodo\n\n\n\n\nEmpresa A\nNada\nfechas\n\n\nEmpresa B\nNada\nfecha"
   },
   {
     "objectID": "about.html#education",
@@ -217,11 +35,32 @@
     "text": "Tools I like to use\n\n\nLenguajes - Python - Swift - Matlab - C\n\n\nLibraries - Pandas - Plotly - Scikit-learn - Tensor Flow - Numpy - Quskit\n\n\nTools - Quarto - Git - Jupyter Notebooks - Symulink - Pycharm\n\n\nOthers - XD - Xd"
   },
   {
-    "objectID": "about.html#experience",
-    "href": "about.html#experience",
-    "title": "About Me",
-    "section": "Experience",
-    "text": "Experience\n\n\n\nEmpresa\nRol\nPeríodo\n\n\n\n\nEmpresa A\nNada\nfechas\n\n\nEmpresa B\nNada\nfecha"
+    "objectID": "projects/lectures/Quantum_Computing/Qubit-basics/index.html",
+    "href": "projects/lectures/Quantum_Computing/Qubit-basics/index.html",
+    "title": "Quantum Computing",
+    "section": "",
+    "text": "No matching items"
+  },
+  {
+    "objectID": "projects/lectures/Numerical_Analysis/index.html",
+    "href": "projects/lectures/Numerical_Analysis/index.html",
+    "title": "Numerical Analysis",
+    "section": "",
+    "text": "Lecture 1.1 Root Finding Methods: Searching Method\n\n\nSearching Method\n\n\n\n\n\n\nMar 28, 2025\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/lectures/index.html",
+    "href": "projects/lectures/index.html",
+    "title": "Undergraduate Lectures",
+    "section": "",
+    "text": "Numerical Analysis\n\n\nNumerical Methods implemented in Python\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantum Computing\n\n\nFundamentos y circuitos cuánticos con Qiskit\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "proyectos.html",
+    "href": "proyectos.html",
+    "title": "My Projects",
+    "section": "",
+    "text": "Notes y projects from my courses\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "proyectos.html#lectures",
@@ -245,90 +84,6 @@
     "text": "Computational Physics\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "projects/lectures/Numerical Analysis/index.html",
-    "href": "projects/lectures/Numerical Analysis/index.html",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "projects/lectures/Numerical Analysis/index.html#introducción",
-    "href": "projects/lectures/Numerical Analysis/index.html#introducción",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "projects/lectures/Numerical Analysis/index.html#datos",
-    "href": "projects/lectures/Numerical Analysis/index.html#datos",
-    "title": "Mi primer análisis",
-    "section": "Datos",
-    "text": "Datos\n\nimport pandas as pd\nimport plotly.express as px\n\ndf = pd.DataFrame({\n    \"mes\": [\"Ene\", \"Feb\", \"Mar\", \"Abr\", \"May\"],\n    \"ventas\": [120, 145, 98, 160, 175]\n})\n\ndf\n\n\n\n\n\n\n\n\nmes\nventas\n\n\n\n\n0\nEne\n120\n\n\n1\nFeb\n145\n\n\n2\nMar\n98\n\n\n3\nAbr\n160\n\n\n4\nMay\n175"
-  },
-  {
-    "objectID": "projects/lectures/Numerical Analysis/index.html#visualización",
-    "href": "projects/lectures/Numerical Analysis/index.html#visualización",
-    "title": "Mi primer análisis",
-    "section": "Visualización",
-    "text": "Visualización\n\nfig = px.bar(\n    df,\n    x=\"mes\",\n    y=\"ventas\",\n    title=\"Ventas por mes\",\n    color=\"ventas\",\n    color_continuous_scale=\"Blues\"\n)\nfig.show()"
-  },
-  {
-    "objectID": "projects/lectures/Numerical Analysis/index.html#conclusión",
-    "href": "projects/lectures/Numerical Analysis/index.html#conclusión",
-    "title": "Mi primer análisis",
-    "section": "Conclusión",
-    "text": "Conclusión\nLas ventas muestran una tendencia positiva con un ligero bache en marzo."
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/index.html",
-    "href": "projects/lectures/Numerical_Analysis/index.html",
-    "title": "Numerical Analysis",
-    "section": "",
-    "text": "Lecture 1.1 Root Finding Methods: Searching Method\n\n\nSearching Method\n\n\n\n\n\n\nMar 28, 2025\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/index.html#introducción",
-    "href": "projects/lectures/Numerical_Analysis/index.html#introducción",
-    "title": "Mi primer análisis",
-    "section": "",
-    "text": "Este es mi primer análisis publicado en mi portafolio."
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/index.html#datos",
-    "href": "projects/lectures/Numerical_Analysis/index.html#datos",
-    "title": "Mi primer análisis",
-    "section": "Datos",
-    "text": "Datos\n\nimport pandas as pd\nimport plotly.express as px\n\ndf = pd.DataFrame({\n    \"mes\": [\"Ene\", \"Feb\", \"Mar\", \"Abr\", \"May\"],\n    \"ventas\": [120, 145, 98, 160, 175]\n})\n\ndf\n\n\n\n\n\n\n\n\nmes\nventas\n\n\n\n\n0\nEne\n120\n\n\n1\nFeb\n145\n\n\n2\nMar\n98\n\n\n3\nAbr\n160\n\n\n4\nMay\n175"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/index.html#visualización",
-    "href": "projects/lectures/Numerical_Analysis/index.html#visualización",
-    "title": "Mi primer análisis",
-    "section": "Visualización",
-    "text": "Visualización\n\nfig = px.bar(\n    df,\n    x=\"mes\",\n    y=\"ventas\",\n    title=\"Ventas por mes\",\n    color=\"ventas\",\n    color_continuous_scale=\"Blues\"\n)\nfig.show()"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/index.html#conclusión",
-    "href": "projects/lectures/Numerical_Analysis/index.html#conclusión",
-    "title": "Mi primer análisis",
-    "section": "Conclusión",
-    "text": "Conclusión\nLas ventas muestran una tendencia positiva con un ligero bache en marzo."
-  },
-  {
-    "objectID": "projects/lectures/Quantum_Computing/index.html",
-    "href": "projects/lectures/Quantum_Computing/index.html",
-    "title": "Quantum Computing",
-    "section": "",
-    "text": "Quantum Computing\n\n\nFundamentos y circuitos cuánticos\n\n\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "projects/lectures/index.html",
-    "href": "projects/lectures/index.html",
-    "title": "Undergraduate Lectures",
-    "section": "",
-    "text": "Numerical Analysis\n\n\nNumerical Methods implemented in Python\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuantum Computing\n\n\nFundamentos y circuitos cuánticos con Qiskit\n\n\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html",
     "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html",
     "title": "Lecture 1.1 Root Finding Methods: Searching Method",
@@ -343,60 +98,11 @@
     "text": "Searching method is used to locate intervals where a root is hidden before using more precise methods like Bisection or Newton-Raphson.\nImportant idea: We are looking for a sign change in the function. If \\(f(x)\\) goes from negative to positive (or vice versa), the curve must have crossed the x-axis."
   },
   {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#bisección",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#bisección",
-    "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Bisección",
-    "text": "Bisección\nLa idea es simple: si \\(f(a)\\) y \\(f(b)\\) tienen signos opuestos, hay una raíz entre \\(a\\) y \\(b\\). Dividimos el intervalo a la mitad repetidamente.\n\nimport numpy as np\nimport plotly.express as px\nimport pandas as pd\n\ndef biseccion(f, a, b, tol=1e-6, max_iter=100):\n    historial = []\n    for i in range(max_iter):\n        c = (a + b) / 2\n        historial.append({\"iteración\": i+1, \"a\": a, \"b\": b, \"c\": c, \"f(c)\": f(c)})\n        if abs(f(c)) &lt; tol or (b - a) / 2 &lt; tol:\n            break\n        if f(a) * f(c) &lt; 0:\n            b = c\n        else:\n            a = c\n    return c, pd.DataFrame(historial)\n\n# Función de prueba: f(x) = x³ - x - 2\nf = lambda x: x**3 - x - 2\n\nraiz, df = biseccion(f, 1, 2)\nprint(f\"Raíz encontrada: {raiz:.6f}\")\ndf.head(10)\n\nRaíz encontrada: 1.521380\n\n\n\n\n\n\n\n\n\niteración\na\nb\nc\nf(c)\n\n\n\n\n0\n1\n1.000000\n2.000000\n1.500000\n-0.125000\n\n\n1\n2\n1.500000\n2.000000\n1.750000\n1.609375\n\n\n2\n3\n1.500000\n1.750000\n1.625000\n0.666016\n\n\n3\n4\n1.500000\n1.625000\n1.562500\n0.252197\n\n\n4\n5\n1.500000\n1.562500\n1.531250\n0.059113\n\n\n5\n6\n1.500000\n1.531250\n1.515625\n-0.034054\n\n\n6\n7\n1.515625\n1.531250\n1.523438\n0.012250\n\n\n7\n8\n1.515625\n1.523438\n1.519531\n-0.010971\n\n\n8\n9\n1.519531\n1.523438\n1.521484\n0.000622\n\n\n9\n10\n1.519531\n1.521484\n1.520508\n-0.005179"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#convergencia",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#convergencia",
-    "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Convergencia",
-    "text": "Convergencia\n\nfig = px.line(\n    df,\n    x=\"iteración\",\n    y=\"f(c)\",\n    title=\"Convergencia — Método de Bisección\",\n    markers=True,\n    labels={\"f(c)\": \"f(c)\", \"iteración\": \"Iteración\"}\n)\nfig.add_hline(y=0, line_dash=\"dash\", line_color=\"red\", annotation_text=\"y=0\")\nfig.show()\n\n                            \n                                            \nConvergencia del método de bisección"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#newton-raphson",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#newton-raphson",
-    "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Newton-Raphson",
-    "text": "Newton-Raphson\nUsa la derivada para converger más rápido: \\(x_{n+1} = x_n - \\dfrac{f(x_n)}{f'(x_n)}\\)\n\ndef newton_raphson(f, df, x0, tol=1e-6, max_iter=100):\n    historial = []\n    x = x0\n    for i in range(max_iter):\n        fx = f(x)\n        historial.append({\"iteración\": i+1, \"x\": x, \"f(x)\": fx})\n        if abs(fx) &lt; tol:\n            break\n        x = x - fx / df(x)\n    return x, pd.DataFrame(historial)\n\nf  = lambda x: x**3 - x - 2\ndf_dx = lambda x: 3*x**2 - 1\n\nraiz_nr, df_nr = newton_raphson(f, df_dx, x0=1.5)\nprint(f\"Raíz encontrada: {raiz_nr:.6f}\")\ndf_nr\n\nRaíz encontrada: 1.521380\n\n\n\n\n\n\n\n\n\niteración\nx\nf(x)\n\n\n\n\n0\n1\n1.500000\n-1.250000e-01\n\n\n1\n2\n1.521739\n2.136928e-03\n\n\n2\n3\n1.521380\n5.893874e-07"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#comparación",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#comparación",
-    "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Comparación",
-    "text": "Comparación\n\ndf[\"método\"] = \"Bisección\"\ndf_nr[\"método\"] = \"Newton-Raphson\"\ndf[\"error\"] = df[\"f(c)\"].abs()\ndf_nr[\"error\"] = df_nr[\"f(x)\"].abs()\n\ncomparacion = pd.concat([\n    df[[\"iteración\", \"error\", \"método\"]],\n    df_nr[[\"iteración\", \"error\", \"método\"]]\n])\n\nfig = px.line(\n    comparacion,\n    x=\"iteración\",\n    y=\"error\",\n    color=\"método\",\n    title=\"Convergencia: Bisección vs Newton-Raphson\",\n    markers=True,\n    log_y=True\n)\nfig.show()\n\n                            \n                                            \nBisección vs Newton-Raphson"
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#conclusión",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#conclusión",
-    "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Conclusión",
-    "text": "Conclusión"
-  },
-  {
-    "objectID": "projects/lectures/Quantum_Computing/Qubit-basics/index.html",
-    "href": "projects/lectures/Quantum_Computing/Qubit-basics/index.html",
-    "title": "Quantum Computing",
-    "section": "",
-    "text": "No matching items"
-  },
-  {
     "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#theoretical-basis",
     "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#theoretical-basis",
     "title": "Lecture 1.1 Root Finding Methods: Searching Method",
     "section": "Theoretical Basis",
     "text": "Theoretical Basis\nWe are going to support our analysis in Bolzano’s theorem:\nLet \\(f\\) be a continuous function on a closed interval \\([a, b]\\). If \\(f(a) \\cdot f(b) &lt; 0\\), then:\n\\[\\exists \\, c \\in (a, b) \\text{ such that } f(c) = 0\\]\nThis theorem is so powerful because it guarantees that there’s at least one root in \\([a, b]\\)."
-  },
-  {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#hands-on",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#hands-on",
-    "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Hands on",
-    "text": "Hands on\nThis code is made for applying the searching algorithm to find the roots in quadratic equations, the idea is to show the diference between the analytic solution and the aproximation interval. It is important to mention that this is a modified version. Not only do it works for positive intervals but also for negative ones.\n\n\nSee implementation\nimport pandas as pd\n\n# Parameters\na = 1.0\nb = -3.0\nc = 2.0\ndeltax = 0.1\n\ndef searching(roots, step):\n  intervalos = []\n  historial = []\n  x = 0.0\n  iterations = 0\n  flag = 0\n  while flag != roots:\n    cuadraticfuncion = lambda a1, b1, c1, x1 : a1*pow(x1, 2) + b1*x1 + c1\n    cuadraticfuncionn = lambda a1, b1, c1, x1 : a1*pow(-x1, 2) + b1*(-x1) + c1\n    fi_p = cuadraticfuncion(a, b, c, x)\n    fi_n = cuadraticfuncionn(a, b, c, x)\n    x = x + step\n    fi_1_p = cuadraticfuncion(a, b, c, x)\n    fi_1_n = cuadraticfuncionn(a, b, c, x)\n    if bool(fi_p&lt;0):\n      f1 = -1\n    else:\n      f1 = 1\n    if bool(fi_1_p&lt;0):\n      f2 = -1\n    else:\n      f2 = 1\n    if bool(fi_n&lt;0):\n      f3 = -1\n    else:\n      f3 = 1\n    if bool(fi_1_n&lt;0):\n      f4 = -1\n    else:\n      f4 = 1\n    if f1*f2 &lt; 0:\n      flag += 1\n      xi_1p = x\n      xip = x - step\n      intervalos.append([xip, xi_1p])\n      historial.append({\"Iterations\": iterations, \"xi\": round(xip,4), \"xi+1\": round(xi_1p,4), \"f(xi)\": round(fi_p,4), \"f(xi+1)\": round(fi_1_p,4), \"Raíz\": \"Found in Positive side\"})\n    else:\n      xi_1p = x\n      xip = x - step\n      historial.append({\"Iterations\": iterations, \"xi\": round(xip,4), \"xi+1\": round(xi_1p,4), \"f(xi)\": round(fi_p,4), \"f(xi+1)\": round(fi_1_p,4), \"Raíz\": \"Not Found\"})\n    if f3*f4 &lt; 0:\n      flag += 1\n      xi_1n = -1 * x\n      xin = xi_1n + step\n      intervalos.append([xin, xi_1n])\n      historial.append({\"Iterations\": iterations, \"xi\": round(xin,4), \"xi+1\": round(xi_1n,4), \"f(xi)\": round(fi_n,4), \"f(xi+1)\": round(fi_1_n,4), \"Raíz\": \"Found in Negative side\"})\n    else:\n      xi_1n = -1 * x\n      xin = xi_1n + step\n      historial.append({\"Iterations\": iterations, \"xi\": round(xin,4), \"xi+1\": round(xi_1n,4), \"f(xi)\": round(fi_n,4), \"f(xi+1)\": round(fi_1_n,4), \"Raíz\": \"Not found\"})\n    \n    iterations += 1\n\n  print(\"¡Great! We have found all roots!\")\n  print(\"Intervalos:\", intervalos)\n  return historial\n\n# Ejecución\nprint(f\"f(x) = {a}x² + {b}x + {c}\")\ndiscriminant = pow(b,2) - (4*a*c)\nprint(f\"Discriminant: {discriminant}\")\n\nif discriminant &lt; 0:\n    print(\"There aren't real roots\")\nelif discriminant == 0:\n    historial = searching(1, deltax)\nelse:\n    historial = searching(2, deltax)\n\n\nf(x) = 1.0x² + -3.0x + 2.0\nDiscriminant: 1.0\n¡Great! We have found all roots!\nIntervalos: [[0.9999999999999999, 1.0999999999999999], [1.9000000000000004, 2.0000000000000004]]"
   },
   {
     "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#the-algorithm",
@@ -413,11 +119,11 @@
     "text": "The error\nIn Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between \\(x_i\\) and \\(x_{i+1}\\), the maximum possible error (the maximum distance to the real root) is the step size:\n\\[E_{max} \\approx \\Delta x\\]"
   },
   {
-    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#iteraciones",
-    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#iteraciones",
+    "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#hands-on",
+    "href": "projects/lectures/Numerical_Analysis/searching_methods/index.html#hands-on",
     "title": "Lecture 1.1 Root Finding Methods: Searching Method",
-    "section": "Iteraciones",
-    "text": "Iteraciones\n\n\n\n\n\n\n\n\n\nIterations\nxi\nxi+1\nf(xi)\nf(xi+1)\nRaíz\n\n\n\n\n0\n0\n0.0\n0.1\n2.00\n1.71\nNot Found\n\n\n1\n0\n0.0\n-0.1\n2.00\n2.31\nNot found\n\n\n2\n1\n0.1\n0.2\n1.71\n1.44\nNot Found\n\n\n3\n1\n-0.1\n-0.2\n2.31\n2.64\nNot found\n\n\n4\n2\n0.2\n0.3\n1.44\n1.19\nNot Found\n\n\n5\n2\n-0.2\n-0.3\n2.64\n2.99\nNot found\n\n\n6\n3\n0.3\n0.4\n1.19\n0.96\nNot Found\n\n\n7\n3\n-0.3\n-0.4\n2.99\n3.36\nNot found\n\n\n8\n4\n0.4\n0.5\n0.96\n0.75\nNot Found\n\n\n9\n4\n-0.4\n-0.5\n3.36\n3.75\nNot found\n\n\n10\n5\n0.5\n0.6\n0.75\n0.56\nNot Found\n\n\n11\n5\n-0.5\n-0.6\n3.75\n4.16\nNot found\n\n\n12\n6\n0.6\n0.7\n0.56\n0.39\nNot Found\n\n\n13\n6\n-0.6\n-0.7\n4.16\n4.59\nNot found\n\n\n14\n7\n0.7\n0.8\n0.39\n0.24\nNot Found\n\n\n15\n7\n-0.7\n-0.8\n4.59\n5.04\nNot found\n\n\n16\n8\n0.8\n0.9\n0.24\n0.11\nNot Found\n\n\n17\n8\n-0.8\n-0.9\n5.04\n5.51\nNot found\n\n\n18\n9\n0.9\n1.0\n0.11\n0.00\nNot Found\n\n\n19\n9\n-0.9\n-1.0\n5.51\n6.00\nNot found\n\n\n20\n10\n1.0\n1.1\n0.00\n-0.09\nFound in Positive side\n\n\n21\n10\n-1.0\n-1.1\n6.00\n6.51\nNot found\n\n\n22\n11\n1.1\n1.2\n-0.09\n-0.16\nNot Found\n\n\n23\n11\n-1.1\n-1.2\n6.51\n7.04\nNot found\n\n\n24\n12\n1.2\n1.3\n-0.16\n-0.21\nNot Found\n\n\n25\n12\n-1.2\n-1.3\n7.04\n7.59\nNot found\n\n\n26\n13\n1.3\n1.4\n-0.21\n-0.24\nNot Found\n\n\n27\n13\n-1.3\n-1.4\n7.59\n8.16\nNot found\n\n\n28\n14\n1.4\n1.5\n-0.24\n-0.25\nNot Found\n\n\n29\n14\n-1.4\n-1.5\n8.16\n8.75\nNot found\n\n\n30\n15\n1.5\n1.6\n-0.25\n-0.24\nNot Found\n\n\n31\n15\n-1.5\n-1.6\n8.75\n9.36\nNot found\n\n\n32\n16\n1.6\n1.7\n-0.24\n-0.21\nNot Found\n\n\n33\n16\n-1.6\n-1.7\n9.36\n9.99\nNot found\n\n\n34\n17\n1.7\n1.8\n-0.21\n-0.16\nNot Found\n\n\n35\n17\n-1.7\n-1.8\n9.99\n10.64\nNot found\n\n\n36\n18\n1.8\n1.9\n-0.16\n-0.09\nNot Found\n\n\n37\n18\n-1.8\n-1.9\n10.64\n11.31\nNot found\n\n\n38\n19\n1.9\n2.0\n-0.09\n0.00\nFound in Positive side\n\n\n39\n19\n-1.9\n-2.0\n11.31\n12.00\nNot found"
+    "section": "Hands on",
+    "text": "Hands on\nThis code is made for applying the searching algorithm to find the roots in quadratic equations, the idea is to show the diference between the analytic solution and the aproximation interval. It is important to mention that this is a modified version. Not only do it works for positive intervals but also for negative ones.\n\n\nSee implementation\nimport pandas as pd\n\n# Parameters\na = 1.0\nb = -3.0\nc = 2.0\ndeltax = 0.1\n\ndef searching(roots, step):\n  intervalos = []\n  historial = []\n  x = 0.0\n  iterations = 0\n  flag = 0\n  while flag != roots:\n    cuadraticfuncion = lambda a1, b1, c1, x1 : a1*pow(x1, 2) + b1*x1 + c1\n    cuadraticfuncionn = lambda a1, b1, c1, x1 : a1*pow(-x1, 2) + b1*(-x1) + c1\n    fi_p = cuadraticfuncion(a, b, c, x)\n    fi_n = cuadraticfuncionn(a, b, c, x)\n    x = x + step\n    fi_1_p = cuadraticfuncion(a, b, c, x)\n    fi_1_n = cuadraticfuncionn(a, b, c, x)\n    if bool(fi_p&lt;0):\n      f1 = -1\n    else:\n      f1 = 1\n    if bool(fi_1_p&lt;0):\n      f2 = -1\n    else:\n      f2 = 1\n    if bool(fi_n&lt;0):\n      f3 = -1\n    else:\n      f3 = 1\n    if bool(fi_1_n&lt;0):\n      f4 = -1\n    else:\n      f4 = 1\n    if f1*f2 &lt; 0:\n      flag += 1\n      xi_1p = x\n      xip = x - step\n      intervalos.append([xip, xi_1p])\n      historial.append({\"Iterations\": iterations, \"xi\": round(xip,4), \"xi+1\": round(xi_1p,4), \"f(xi)\": round(fi_p,4), \"f(xi+1)\": round(fi_1_p,4), \"Raíz\": \"Found in Positive side\"})\n    else:\n      xi_1p = x\n      xip = x - step\n      historial.append({\"Iterations\": iterations, \"xi\": round(xip,4), \"xi+1\": round(xi_1p,4), \"f(xi)\": round(fi_p,4), \"f(xi+1)\": round(fi_1_p,4), \"Raíz\": \"Not Found\"})\n    if f3*f4 &lt; 0:\n      flag += 1\n      xi_1n = -1 * x\n      xin = xi_1n + step\n      intervalos.append([xin, xi_1n])\n      historial.append({\"Iterations\": iterations, \"xi\": round(xin,4), \"xi+1\": round(xi_1n,4), \"f(xi)\": round(fi_n,4), \"f(xi+1)\": round(fi_1_n,4), \"Raíz\": \"Found in Negative side\"})\n    else:\n      xi_1n = -1 * x\n      xin = xi_1n + step\n      historial.append({\"Iterations\": iterations, \"xi\": round(xin,4), \"xi+1\": round(xi_1n,4), \"f(xi)\": round(fi_n,4), \"f(xi+1)\": round(fi_1_n,4), \"Raíz\": \"Not found\"})\n    \n    iterations += 1\n\n  print(\"¡Great! We have found all roots!\")\n  print(\"Intervalos:\", intervalos)\n  return historial\n\n# Ejecución\nprint(f\"f(x) = {a}x² + {b}x + {c}\")\ndiscriminant = pow(b,2) - (4*a*c)\nprint(f\"Discriminant: {discriminant}\")\n\nif discriminant &lt; 0:\n    print(\"There aren't real roots\")\nelif discriminant == 0:\n    historial = searching(1, deltax)\nelse:\n    historial = searching(2, deltax)\n\n\nf(x) = 1.0x² + -3.0x + 2.0\nDiscriminant: 1.0\n¡Great! We have found all roots!\nIntervalos: [[0.9999999999999999, 1.0999999999999999], [1.9000000000000004, 2.0000000000000004]]"
   },
   {
     "objectID": "projects/lectures/Numerical_Analysis/searching_methods/index.html#iterations",
@@ -439,5 +145,40 @@
     "title": "Lecture 1.1 Root Finding Methods: Searching Method",
     "section": "Conclusions",
     "text": "Conclusions\nThe iterative search method relies entirely on the fact that \\(Δ𝑥\\) is small enough to capture the “frequency” of the function. This means that, if we aren’t careful, we might find roots, but the calculations would take forever if the root were actually far from zero."
+  },
+  {
+    "objectID": "projects/lectures/Quantum_Computing/index.html",
+    "href": "projects/lectures/Quantum_Computing/index.html",
+    "title": "Quantum Computing",
+    "section": "",
+    "text": "Quantum Computing\n\n\nFundamentos y circuitos cuánticos\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "My Portfolio",
+    "section": "",
+    "text": "I really like to see how computers can helps us to improve our understanding of the world\nPrincipally I work with Python, Pandas, y Tensor Flow.\nHere you will find some materials from lectures I have given, personal projects and learnings.\nIf you have and doubt, feel free to send me an email.\nSee my projects About me"
+  },
+  {
+    "objectID": "index.html#welcome",
+    "href": "index.html#welcome",
+    "title": "My Portfolio",
+    "section": "",
+    "text": "I really like to see how computers can helps us to improve our understanding of the world\nPrincipally I work with Python, Pandas, y Tensor Flow.\nHere you will find some materials from lectures I have given, personal projects and learnings.\nIf you have and doubt, feel free to send me an email.\nSee my projects About me"
+  },
+  {
+    "objectID": "index.html#habilities",
+    "href": "index.html#habilities",
+    "title": "My Portfolio",
+    "section": "Habilities",
+    "text": "Habilities\n\n\nPython\nPandas, NumPy, Scikit-learn, Tensor Flow, Qskit\n\n\nVisualization\nPlotly, Matplotlib, Seaborn\n\n\nPublicación\nQuarto, GitHub Pages"
+  },
+  {
+    "objectID": "index.html#topics-covered",
+    "href": "index.html#topics-covered",
+    "title": "My Portfolio",
+    "section": "Topics Covered",
+    "text": "Topics Covered\n\nModern Physics, Quantum Mechanics, Quantum Computing, Machine Learning, Deep Learning, Control Systems, Linear Algebra, Numerical Analysis."
   }
 ]
