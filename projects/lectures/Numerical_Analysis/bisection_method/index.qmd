@@ -1,0 +1,216 @@
+---
+title: "Lecture 1.2 Root Finding Methods: Bisection Method"
+description: "Bisection Method"
+date: 2025-03-30
+categories: [numerical-analysis, python]
+image: bolzanos_theorem.png
+---
+
+## Overview
+
+Searching method is used to locate intervals where a root is hidden before using more precise methods like Bisection or Newton-Raphson.
+
+**Important idea**: We are looking for a sign change in the function. If $f(x)$ goes from negative to positive (or vice versa), the curve must have crossed the x-axis.
+
+## Theoretical Basis
+
+We are going to support our analysis in Bolzano's theorem:
+
+Let $f$ be a continuous function on a closed interval $[a, b]$. If $f(a) \cdot f(b) < 0$, then:
+
+$$\exists \, c \in (a, b) \text{ such that } f(c) = 0$$
+
+This theorem is so powerful because it guarantees that there's at least one root in $[a, b]$.
+
+## The algorithm
+
+Let be i the iteration, if a sequence of points is defined as follows:
+
+$$x_{i+1} = x_i + \Delta x $$
+
+We can evaluate the crossing condition at each step:
+
+$$f(x_i) \cdot f(x_{i+1}) < 0$$
+
+If this is true, the root is in the interval:
+
+$$(x_i, x_{i+1})$$
+
+If not, $f>0$, we continue "walking" $\Delta x$
+
+## The error
+
+In Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between $x_i$ and $x_{i+1}$, the maximum possible error (the maximum distance to the real root) is the step size:
+
+$$E_{max} \approx \Delta x$$
+
+## Hands on
+
+This code is made for applying the searching algorithm to find the roots in quadratic equations, the idea is to show the diference between the analytic solution and the aproximation interval. It is important to mention that this is a modified version. Not only do it works for positive intervals but also for negative ones.
+
+```{python}
+#| echo: true
+#| code-fold: true
+#| code-summary: "See implementation"
+
+import pandas as pd
+
+# Parameters
+a = 1.0
+b = -3.0
+c = 2.0
+deltax = 0.1
+
+def searching(roots, step):
+  intervalos = []
+  historial = []
+  x = 0.0
+  iterations = 0
+  flag = 0
+  while flag != roots:
+    cuadraticfuncion = lambda a1, b1, c1, x1 : a1*pow(x1, 2) + b1*x1 + c1
+    cuadraticfuncionn = lambda a1, b1, c1, x1 : a1*pow(-x1, 2) + b1*(-x1) + c1
+    fi_p = cuadraticfuncion(a, b, c, x)
+    fi_n = cuadraticfuncionn(a, b, c, x)
+    x = x + step
+    fi_1_p = cuadraticfuncion(a, b, c, x)
+    fi_1_n = cuadraticfuncionn(a, b, c, x)
+    if bool(fi_p<0):
+      f1 = -1
+    else:
+      f1 = 1
+    if bool(fi_1_p<0):
+      f2 = -1
+    else:
+      f2 = 1
+    if bool(fi_n<0):
+      f3 = -1
+    else:
+      f3 = 1
+    if bool(fi_1_n<0):
+      f4 = -1
+    else:
+      f4 = 1
+    if f1*f2 < 0:
+      flag += 1
+      xi_1p = x
+      xip = x - step
+      intervalos.append([xip, xi_1p])
+      historial.append({"Iterations": iterations, "xi": round(xip,4), "xi+1": round(xi_1p,4), "f(xi)": round(fi_p,4), "f(xi+1)": round(fi_1_p,4), "Raíz": "Found in Positive side"})
+    else:
+      xi_1p = x
+      xip = x - step
+      historial.append({"Iterations": iterations, "xi": round(xip,4), "xi+1": round(xi_1p,4), "f(xi)": round(fi_p,4), "f(xi+1)": round(fi_1_p,4), "Raíz": "Not Found"})
+    if f3*f4 < 0:
+      flag += 1
+      xi_1n = -1 * x
+      xin = xi_1n + step
+      intervalos.append([xin, xi_1n])
+      historial.append({"Iterations": iterations, "xi": round(xin,4), "xi+1": round(xi_1n,4), "f(xi)": round(fi_n,4), "f(xi+1)": round(fi_1_n,4), "Raíz": "Found in Negative side"})
+    else:
+      xi_1n = -1 * x
+      xin = xi_1n + step
+      historial.append({"Iterations": iterations, "xi": round(xin,4), "xi+1": round(xi_1n,4), "f(xi)": round(fi_n,4), "f(xi+1)": round(fi_1_n,4), "Raíz": "Not found"})
+    
+    iterations += 1
+
+  print("¡Great! We have found all roots!")
+  print("Intervalos:", intervalos)
+  return historial
+
+# Ejecución
+print(f"f(x) = {a}x² + {b}x + {c}")
+discriminant = pow(b,2) - (4*a*c)
+print(f"Discriminant: {discriminant}")
+
+if discriminant < 0:
+    print("There aren't real roots")
+elif discriminant == 0:
+    historial = searching(1, deltax)
+else:
+    historial = searching(2, deltax)
+```
+
+## Iterations
+```{python}
+#| echo: false
+pd.DataFrame(historial)
+```
+
+## Visualization
+```{python}
+#| echo: false
+
+import plotly.graph_objects as go
+import numpy as np
+
+df = pd.DataFrame(historial)
+
+x_min = min(df["xi"].min(), -1) - 1
+x_max = max(df["xi+1"].max(), 4) + 1
+x_plot = np.linspace(x_min, x_max, 400)
+y_plot = a * x_plot**2 + b * x_plot + c
+
+fig = go.Figure()
+
+# Function curve
+fig.add_trace(go.Scatter(
+    x=x_plot, y=y_plot,
+    mode="lines",
+    name="f(x)",
+    line=dict(color="#4e79a7", width=3)
+))
+
+# y=0 line
+fig.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5)
+
+# Intervals where root was found
+raices = df[df["Root"].str.contains("✅")] if "Root" in df.columns else df[df["Raíz"].str.contains("✅")]
+col_raiz = "Root" if "Root" in df.columns else "Raíz"
+raices = df[df[col_raiz].str.contains("✅")]
+
+for _, row in raices.iterrows():
+    fig.add_vrect(
+        x0=row["xi"], x1=row["xi+1"],
+        fillcolor="rgba(80, 200, 120, 0.25)",
+        line=dict(color="rgba(80,200,120,0.6)", width=1),
+        annotation_text=f"Root ~{round((row['xi']+row['xi+1'])/2, 2)}",
+        annotation_position="top left"
+    )
+
+# Evaluated points
+fig.add_trace(go.Scatter(
+    x=df["xi"], y=df["f(xi)"],
+    mode="markers",
+    name="Evaluated points",
+    marker=dict(
+        color=df[col_raiz].apply(lambda r: "#2ecc71" if "✅" in r else "#e74c3c"),
+        size=8,
+        symbol="circle"
+    ),
+    hovertemplate="xi: %{x}<br>f(xi): %{y}<extra></extra>"
+))
+
+y_min = min(df["f(xi)"].min(), y_plot.min()) - 1
+y_max = max(df["f(xi)"].max(), y_plot.max()) + 1
+
+fig.update_layout(
+    title="Searching Method — f(x) = ax² + bx + c",
+    xaxis_title="x",
+    yaxis_title="f(x)",
+    yaxis=dict(range=[max(y_min, -10), min(y_max, 10)]),
+    xaxis=dict(range=[x_min, x_max]),
+    height=500,
+    legend=dict(orientation="h", y=-0.2),
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font=dict(color="#ffffff")
+)
+
+fig.show()
+```
+
+## Conclusions
+
+The iterative search method relies entirely on the fact that $Δ𝑥$ is small enough to capture the “frequency” of the function.
+This means that, if we aren't careful, we might find roots, but the calculations would take forever if the root were actually far from zero. 

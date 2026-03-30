@@ -115,10 +115,10 @@ def searching(roots, step):
     iterations += 1
 
   print("¡Great! We have found all roots!")
-  print("Intervalos:", intervalos)
+  print("Intervals:", intervalos)
   return historial
 
-# Ejecución
+# Execution
 print(f"f(x) = {a}x² + {b}x + {c}")
 discriminant = pow(b,2) - (4*a*c)
 print(f"Discriminant: {discriminant}")
@@ -165,9 +165,9 @@ fig.add_trace(go.Scatter(
 fig.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5)
 
 # Intervals where root was found
-raices = df[df["Root"].str.contains("✅")] if "Root" in df.columns else df[df["Raíz"].str.contains("✅")]
+raices = df[df["Root"].str.contains("Found")] if "Root" in df.columns else df[df["Raíz"].str.contains("Found")]
 col_raiz = "Root" if "Root" in df.columns else "Raíz"
-raices = df[df[col_raiz].str.contains("✅")]
+raices = df[df[col_raiz].str.contains("Found")]
 
 for _, row in raices.iterrows():
     fig.add_vrect(
@@ -184,7 +184,7 @@ fig.add_trace(go.Scatter(
     mode="markers",
     name="Evaluated points",
     marker=dict(
-        color=df[col_raiz].apply(lambda r: "#2ecc71" if "✅" in r else "#e74c3c"),
+        color=df[col_raiz].apply(lambda r: "#2ecc71" if "Found" in r else "#e74c3c"),
         size=8,
         symbol="circle"
     ),
