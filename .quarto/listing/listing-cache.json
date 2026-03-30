@@ -4,15 +4,6 @@
       "projects/lectures/index.qmd",
       "projects/machine-learning/**",
       "projects/visualizacion/**"
-    ],
-    "projects/lectures/Numerical_Analysis/index.qmd": [
-      "*/index.qmd"
-    ],
-    "projects/lectures/Quantum_Computing/index.qmd": [
-      "*/index.qmd"
-    ],
-    "projects/lectures/Quantum_Computing/Qubit-basics/index.qmd": [
-      "*/index.qmd"
     ]
   }
 }

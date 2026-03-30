@@ -4,6 +4,12 @@ project:
 execute:
   freeze: auto 
 
+jupyter:
+  kernelspec:
+    name: porta
+    language: python
+    display_name: porta
+    
 website:
   title: "Gabriel Velazquez | Physics "
   navbar:
