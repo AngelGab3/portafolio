@@ -8,19 +8,63 @@ image: bolzanos_theorem.png
 
 ## Overview
 
-Searching method is used to locate intervals where a root is hidden before using more precise methods like Bisection or Newton-Raphson.
+Bisection method is one of the most powerful methods because we can stimate the number of steps that are necessary to guarantee at least certain tolerance $\epsilon$. 
 
-**Important idea**: We are looking for a sign change in the function. If $f(x)$ goes from negative to positive (or vice versa), the curve must have crossed the x-axis.
+**Important idea**: Just as in the search method, we continue to look for a change in the sign of the function. But now, let’s imagine we have an interval $[a,b]$. First, we calculate the midpoint $c$ between $a$ and $b$. Next, we apply Bolzano’s theorem to $[a,c]$ and $[c,b]$; depending on our results, the new interval will be one of those two. 
 
-## Theoretical Basis
+## Theoretical Basis and Demonstrations
 
-We are going to support our analysis in Bolzano's theorem:
+Remenber Bolzano's theorem:
 
 Let $f$ be a continuous function on a closed interval $[a, b]$. If $f(a) \cdot f(b) < 0$, then:
 
-$$\exists \, c \in (a, b) \text{ such that } f(c) = 0$$
+$$
+\exists \alpha \in (a, b) \text{ such that } f(\alpha) = 0
+$$
 
-This theorem is so powerful because it guarantees that there's at least one root in $[a, b]$.
+The bisection method generates a secuence 
+$$
+\{s_n\}_{n=1}^{\infty} \quad
+$$
+
+that aproximates to $\alpha$ with:
+
+$$
+|s_n - \alpha| \leq \frac{b - a}{2^n}, \text{when n}\leq 1
+$$
+
+Where the aproximate root $s_n$ is 
+
+$$
+\frac{b_{n-1} + a_{n-1}}{2}
+$$
+
+To reach an accuracy of 
+
+$$
+|s_n - \alpha| \leq \epsilon
+$$
+
+We only need to take
+$$
+n > \frac{\ln(b - a) - \ln(\epsilon)}{\ln(2)}
+$$
+
+**Proof by construction**
+
+Let be $[a_1, b_1]$ the initial interval, its length $L = b_1 - a_1 = b - a$, the inicial mid point is $a_1$
+
+Applying induction over the length, in each step we divide the curretn interval.
+
+$n = 1$, $L = \frac{b-a}{2}$
+
+$n=2$, $L= \frac{1}{2} (\frac{b-a}{2})= \frac{b-a}{2^2}$
+
+...
+
+$n=2$, $[a_n, b_n]= \frac{b-a}{2^{n-1}}$
+
+Notice that the exponent is $n-1$ because in $n = 1$, the length has reduced once respect to the original or $2^n$ if the consider the absolute error from the start. 
 
 ## The algorithm
 
@@ -38,7 +82,7 @@ $$(x_i, x_{i+1})$$
 
 If not, $f>0$, we continue "walking" $\Delta x$
 
-## The error
+## Convergence Order
 
 In Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between $x_i$ and $x_{i+1}$, the maximum possible error (the maximum distance to the real root) is the step size:
 
