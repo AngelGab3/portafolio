@@ -146,7 +146,7 @@ import numpy as np
 
 df = pd.DataFrame(historial)
 
-x_min = min(df["xi"].min(), -1) - 1s
+x_min = min(df["xi"].min(), -1) - 1
 x_max = max(df["xi+1"].max(), 4) + 1
 x_plot = np.linspace(x_min, x_max, 400)
 y_plot = a * x_plot**2 + b * x_plot + c
