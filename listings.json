@@ -6,7 +6,14 @@
   {
     "listing": "/projects/lectures/Numerical_Analysis/index.html",
     "items": [
+      "/projects/lectures/Numerical_Analysis/bisection_method/index.html",
       "/projects/lectures/Numerical_Analysis/searching_methods/index.html"
+    ]
+  },
+  {
+    "listing": "/proyectos.html",
+    "items": [
+      "/projects/lectures/index.html"
     ]
   },
   {
@@ -14,12 +21,6 @@
     "items": [
       "/projects/lectures/Numerical_Analysis/index.html",
       "/projects/lectures/Quantum_Computing/index.html"
-    ]
-  },
-  {
-    "listing": "/proyectos.html",
-    "items": [
-      "/projects/lectures/index.html"
     ]
   },
   {
