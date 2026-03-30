@@ -31,5 +31,8 @@
   },
   "projects/lectures/Quantum_Computing/Qubit-basics/index.qmd": {
     "index.html": "7d155fcb"
+  },
+  "projects/lectures/Numerical_Analysis/bisection_method/index.qmd": {
+    "index.html": "89a31dc4"
   }
 }
