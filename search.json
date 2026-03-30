@@ -53,21 +53,21 @@
     "href": "projects/lectures/Numerical_Analysis/bisection_method/index.html",
     "title": "Lecture 1.2 Root Finding Methods: Bisection Method",
     "section": "",
-    "text": "Searching method is used to locate intervals where a root is hidden before using more precise methods like Bisection or Newton-Raphson.\nImportant idea: We are looking for a sign change in the function. If \\(f(x)\\) goes from negative to positive (or vice versa), the curve must have crossed the x-axis."
+    "text": "Bisection method is one of the most powerful methods because we can stimate the number of steps that are necessary to guarantee at least certain tolerance \\(\\epsilon\\).\nImportant idea: Just as in the search method, we continue to look for a change in the sign of the function. But now, let’s imagine we have an interval \\([a,b]\\). First, we calculate the midpoint \\(c\\) between \\(a\\) and \\(b\\). Next, we apply Bolzano’s theorem to \\([a,c]\\) and \\([c,b]\\); depending on our results, the new interval will be one of those two."
   },
   {
     "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#overview",
     "href": "projects/lectures/Numerical_Analysis/bisection_method/index.html#overview",
     "title": "Lecture 1.2 Root Finding Methods: Bisection Method",
     "section": "",
-    "text": "Searching method is used to locate intervals where a root is hidden before using more precise methods like Bisection or Newton-Raphson.\nImportant idea: We are looking for a sign change in the function. If \\(f(x)\\) goes from negative to positive (or vice versa), the curve must have crossed the x-axis."
+    "text": "Bisection method is one of the most powerful methods because we can stimate the number of steps that are necessary to guarantee at least certain tolerance \\(\\epsilon\\).\nImportant idea: Just as in the search method, we continue to look for a change in the sign of the function. But now, let’s imagine we have an interval \\([a,b]\\). First, we calculate the midpoint \\(c\\) between \\(a\\) and \\(b\\). Next, we apply Bolzano’s theorem to \\([a,c]\\) and \\([c,b]\\); depending on our results, the new interval will be one of those two."
   },
   {
-    "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#theoretical-basis",
-    "href": "projects/lectures/Numerical_Analysis/bisection_method/index.html#theoretical-basis",
+    "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#theoretical-basis-and-demonstrations",
+    "href": "projects/lectures/Numerical_Analysis/bisection_method/index.html#theoretical-basis-and-demonstrations",
     "title": "Lecture 1.2 Root Finding Methods: Bisection Method",
-    "section": "Theoretical Basis",
-    "text": "Theoretical Basis\nWe are going to support our analysis in Bolzano’s theorem:\nLet \\(f\\) be a continuous function on a closed interval \\([a, b]\\). If \\(f(a) \\cdot f(b) &lt; 0\\), then:\n\\[\\exists \\, c \\in (a, b) \\text{ such that } f(c) = 0\\]\nThis theorem is so powerful because it guarantees that there’s at least one root in \\([a, b]\\)."
+    "section": "Theoretical Basis and Demonstrations",
+    "text": "Theoretical Basis and Demonstrations\nRemenber Bolzano’s theorem:\nLet \\(f\\) be a continuous function on a closed interval \\([a, b]\\). If \\(f(a) \\cdot f(b) &lt; 0\\), then:\n\\[\n\\exists \\alpha \\in (a, b) \\text{ such that } f(\\alpha) = 0\n\\]\nThe bisection method generates a secuence \\[\n\\{s_n\\}_{n=1}^{\\infty} \\quad\n\\]\nthat aproximates to \\(\\alpha\\) with:\n\\[\n|s_n - \\alpha| \\leq \\frac{b - a}{2^n}, \\text{when n}\\leq 1\n\\]\nWhere the aproximate root \\(s_n\\) is\n\\[\n\\frac{b_{n-1} + a_{n-1}}{2}\n\\]\nTo reach an accuracy of\n\\[\n|s_n - \\alpha| \\leq \\epsilon\n\\]\nWe only need to take \\[\nn &gt; \\frac{\\ln(b - a) - \\ln(\\epsilon)}{\\ln(2)}\n\\]\nProof by construction\nLet be \\([a_1, b_1]\\) the initial interval, its length \\(L = b_1 - a_1 = b - a\\), the inicial mid point is \\(a_1\\)\nApplying induction over the length, in each step we divide the curretn interval.\n\\(n = 1\\), \\(L = \\frac{b-a}{2}\\)\n\\(n=2\\), \\(L= \\frac{1}{2} (\\frac{b-a}{2})= \\frac{b-a}{2^2}\\)\n…\n\\(n=2\\), \\([a_n, b_n]= \\frac{b-a}{2^{n-1}}\\)\nNotice that the exponent is \\(n-1\\) because in \\(n = 1\\), the length has reduced once respect to the original or \\(2^n\\) if the consider the absolute error from the start."
   },
   {
     "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#the-algorithm",
@@ -77,11 +77,11 @@
     "text": "The algorithm\nLet be i the iteration, if a sequence of points is defined as follows:\n\\[x_{i+1} = x_i + \\Delta x \\]\nWe can evaluate the crossing condition at each step:\n\\[f(x_i) \\cdot f(x_{i+1}) &lt; 0\\]\nIf this is true, the root is in the interval:\n\\[(x_i, x_{i+1})\\]\nIf not, \\(f&gt;0\\), we continue “walking” \\(\\Delta x\\)"
   },
   {
-    "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#the-error",
-    "href": "projects/lectures/Numerical_Analysis/bisection_method/index.html#the-error",
+    "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#convergence-order",
+    "href": "projects/lectures/Numerical_Analysis/bisection_method/index.html#convergence-order",
     "title": "Lecture 1.2 Root Finding Methods: Bisection Method",
-    "section": "The error",
-    "text": "The error\nIn Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between \\(x_i\\) and \\(x_{i+1}\\), the maximum possible error (the maximum distance to the real root) is the step size:\n\\[E_{max} \\approx \\Delta x\\]"
+    "section": "Convergence Order",
+    "text": "Convergence Order\nIn Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between \\(x_i\\) and \\(x_{i+1}\\), the maximum possible error (the maximum distance to the real root) is the step size:\n\\[E_{max} \\approx \\Delta x\\]"
   },
   {
     "objectID": "projects/lectures/Numerical_Analysis/bisection_method/index.html#hands-on",
