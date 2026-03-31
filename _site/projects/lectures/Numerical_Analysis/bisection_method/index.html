@@ -197,10 +197,11 @@ window.Quarto = {
   <ul>
   <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
   <li><a href="#theoretical-basis-and-demonstrations" id="toc-theoretical-basis-and-demonstrations" class="nav-link" data-scroll-target="#theoretical-basis-and-demonstrations">Theoretical Basis and Demonstrations</a></li>
-  <li><a href="#the-algorithm" id="toc-the-algorithm" class="nav-link" data-scroll-target="#the-algorithm">The algorithm</a></li>
   <li><a href="#convergence-order" id="toc-convergence-order" class="nav-link" data-scroll-target="#convergence-order">Convergence Order</a></li>
+  <li><a href="#the-algorithm" id="toc-the-algorithm" class="nav-link" data-scroll-target="#the-algorithm">The algorithm</a></li>
   <li><a href="#hands-on" id="toc-hands-on" class="nav-link" data-scroll-target="#hands-on">Hands on</a></li>
   <li><a href="#iterations" id="toc-iterations" class="nav-link" data-scroll-target="#iterations">Iterations</a></li>
+  <li><a href="#error-convergence" id="toc-error-convergence" class="nav-link" data-scroll-target="#error-convergence">Error Convergence</a></li>
   <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
   </ul>
@@ -273,125 +274,143 @@ window.Quarto = {
 <p>We only need to take <span class="math display">\[
 n &gt; \frac{\ln(b - a) - \ln(\epsilon)}{\ln(2)}
 \]</span></p>
-<p><strong>Proof by construction</strong></p>
+<p><strong>Time to prove</strong></p>
 <p>Let be <span class="math inline">\([a_1, b_1]\)</span> the initial interval, its length <span class="math inline">\(L = b_1 - a_1 = b - a\)</span>, the inicial mid point is <span class="math inline">\(a_1\)</span></p>
 <p>Applying induction over the length, in each step we divide the curretn interval.</p>
 <p><span class="math inline">\(n = 1\)</span>, <span class="math inline">\(L = \frac{b-a}{2}\)</span></p>
 <p><span class="math inline">\(n=2\)</span>, <span class="math inline">\(L= \frac{1}{2} (\frac{b-a}{2})= \frac{b-a}{2^2}\)</span></p>
 <p>…</p>
 <p><span class="math inline">\(n=2\)</span>, <span class="math inline">\([a_n, b_n]= \frac{b-a}{2^{n-1}}\)</span></p>
-<p>Notice that the exponent is <span class="math inline">\(n-1\)</span> because in <span class="math inline">\(n = 1\)</span>, the length has reduced once respect to the original or <span class="math inline">\(2^n\)</span> if the consider the absolute error from the start.</p>
-</section>
-<section id="the-algorithm" class="level2">
-<h2 class="anchored" data-anchor-id="the-algorithm">The algorithm</h2>
-<p>Let be i the iteration, if a sequence of points is defined as follows:</p>
-<p><span class="math display">\[x_{i+1} = x_i + \Delta x \]</span></p>
-<p>We can evaluate the crossing condition at each step:</p>
-<p><span class="math display">\[f(x_i) \cdot f(x_{i+1}) &lt; 0\]</span></p>
-<p>If this is true, the root is in the interval:</p>
-<p><span class="math display">\[(x_i, x_{i+1})\]</span></p>
-<p>If not, <span class="math inline">\(f&gt;0\)</span>, we continue “walking” <span class="math inline">\(\Delta x\)</span></p>
+<p>Notice that the exponent is <span class="math inline">\(n-1\)</span> because in <span class="math inline">\(n = 1\)</span>, the length has been reduced once respect to the original or <span class="math inline">\(2^n\)</span> if the consider the absolute error from the start.</p>
+<p>Now, we know that <span class="math inline">\(\alpha \in [a_n, b_n]\)</span>, the aproximation <span class="math inline">\(s_n\)</span> is the mid point of the interval:</p>
+<p><span class="math display">\[
+s_n = \frac{a_n-b_n}{2}
+\]</span></p>
+<p>Geometrically, the maximun distance from <span class="math inline">\(s_n\)</span> to any extreme point is the half of the current interval.</p>
+<p><span class="math display">\[
+\therefore |s_n - \alpha| \leq \frac{1}{2}(b_n - a_n) = \frac{1}{2}\frac{b - a}{2^{n-1}} = \frac{b - a}{2^n}
+\]</span></p>
+<p>Rember we said that <span class="math display">\[
+|s_n - \alpha| \leq \epsilon
+\]</span></p>
+<p><span class="math display">\[
+\implies \frac{2^n}{b-a}&gt;\frac{1}{\epsilon}
+\]</span></p>
+<p><span class="math display">\[
+\implies 2^n&gt;\frac{b-a}{\epsilon}
+\]</span></p>
+<p><span class="math display">\[
+\implies \ln(2^n)&gt;\ln(\frac{b-a}{\epsilon})
+\]</span></p>
+<p><span class="math display">\[
+\implies n&gt;\frac{\ln(\frac{b-a}{\epsilon})}{\ln(2)}
+\]</span></p>
+<p>or also:</p>
+<p><span class="math display">\[
+n&gt; \log_2 \frac{b-a}{\epsilon}
+\]</span></p>
 </section>
 <section id="convergence-order" class="level2">
 <h2 class="anchored" data-anchor-id="convergence-order">Convergence Order</h2>
-<p>In Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between <span class="math inline">\(x_i\)</span> and <span class="math inline">\(x_{i+1}\)</span>, the maximum possible error (the maximum distance to the real root) is the step size:</p>
-<p><span class="math display">\[E_{max} \approx \Delta x\]</span></p>
+<p>The convergence order determines the rate at which a sequence of approximations converges to the true solution.</p>
+<p>Let be the real error <span class="math inline">\(E_n = | s_n - \alpha |\)</span>, a sequence converges to <span class="math inline">\(\alpha\)</span> with a convergence order <span class="math inline">\(\tau\)</span> and a asintotic error constant called <span class="math inline">\(\lambda\)</span> (<span class="math inline">\(\lambda&gt;0\)</span>) if it satifies the following limit:</p>
+<p><span class="math display">\[
+\lim_{n \to \infty} \frac{|s_{n+1} - \alpha|}{|s_n - \alpha|^\tau} = \lim_{n \to \infty} \frac{E_{n+1}}{(E_n)^\tau} = \lambda
+\]</span></p>
+<p>In the worsth case: <span class="math display">\[
+|e_{n+1}| \approx \frac{1}{2} |e_n|
+\]</span></p>
+<p><span class="math display">\[
+\implies \tau = 1 \text{ and } \lambda = 0.5
+\]</span></p>
+<p>Due to the fact <span class="math inline">\(\tau = 1\)</span>, we say that the algorithm converges linearly.</p>
+</section>
+<section id="the-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="the-algorithm">The algorithm</h2>
+<p>The logic can be summarized in the following steps:</p>
+<p>For <span class="math inline">\(n = 1, 2, 3, \dots\)</span>:</p>
+<p>The mid point in the <span class="math inline">\(n\)</span> iteration is defined as <span class="math inline">\(s_n = \frac{a_n + b_n}{2}\)</span>.1</p>
+<ul>
+<li><p>Evaluate <span class="math inline">\(f(s_n)\)</span>.</p></li>
+<li><p>If <span class="math inline">\(f(s_n) = 0\)</span> or <span class="math inline">\(\frac{b_n - a_n}{2} &lt; \epsilon\)</span>, stop the algorithm; <span class="math inline">\(s_n\)</span> is the root.</p></li>
+<li><p>If <span class="math inline">\(f(a_n) \cdot f(s_n) &lt; 0\)</span>, root is in the left half. Hence <span class="math inline">\(a_{n+1} = a_n\)</span> and <span class="math inline">\(b_{n+1} = s_n\)</span>.</p></li>
+<li><p>If not , the root is in the rigth half. Hence <span class="math inline">\(a_{n+1} = s_n\)</span> and <span class="math inline">\(b_{n+1} = b_n\)</span>.</p></li>
+</ul>
 </section>
 <section id="hands-on" class="level2">
 <h2 class="anchored" data-anchor-id="hands-on">Hands on</h2>
-<p>This code is made for applying the searching algorithm to find the roots in quadratic equations, the idea is to show the diference between the analytic solution and the aproximation interval. It is important to mention that this is a modified version. Not only do it works for positive intervals but also for negative ones.</p>
-<div id="6349e55d" class="cell" data-execution_count="1">
+<p>Here, you will see two important concepts, <strong>Theorical bound</strong> and the <strong>Real error</strong>, this code is designed to show you this difference.</p>
+<div id="60a25059" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>See implementation</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">1.0</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="op">-</span><span class="fl">3.0</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> <span class="fl">2.0</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>deltax <span class="op">=</span> <span class="fl">0.1</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> searching(roots, step):</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  intervalos <span class="op">=</span> []</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  historial <span class="op">=</span> []</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  x <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  iterations <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  flag <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> flag <span class="op">!=</span> roots:</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    cuadraticfuncion <span class="op">=</span> <span class="kw">lambda</span> a1, b1, c1, x1 : a1<span class="op">*</span><span class="bu">pow</span>(x1, <span class="dv">2</span>) <span class="op">+</span> b1<span class="op">*</span>x1 <span class="op">+</span> c1</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    cuadraticfuncionn <span class="op">=</span> <span class="kw">lambda</span> a1, b1, c1, x1 : a1<span class="op">*</span><span class="bu">pow</span>(<span class="op">-</span>x1, <span class="dv">2</span>) <span class="op">+</span> b1<span class="op">*</span>(<span class="op">-</span>x1) <span class="op">+</span> c1</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    fi_p <span class="op">=</span> cuadraticfuncion(a, b, c, x)</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    fi_n <span class="op">=</span> cuadraticfuncionn(a, b, c, x)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">+</span> step</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    fi_1_p <span class="op">=</span> cuadraticfuncion(a, b, c, x)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    fi_1_n <span class="op">=</span> cuadraticfuncionn(a, b, c, x)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">bool</span>(fi_p<span class="op">&lt;</span><span class="dv">0</span>):</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      f1 <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>      f1 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">bool</span>(fi_1_p<span class="op">&lt;</span><span class="dv">0</span>):</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>      f2 <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>      f2 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">bool</span>(fi_n<span class="op">&lt;</span><span class="dv">0</span>):</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>      f3 <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>      f3 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">bool</span>(fi_1_n<span class="op">&lt;</span><span class="dv">0</span>):</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>      f4 <span class="op">=</span> <span class="op">-</span><span class="dv">1</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>      f4 <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> f1<span class="op">*</span>f2 <span class="op">&lt;</span> <span class="dv">0</span>:</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>      flag <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>      xi_1p <span class="op">=</span> x</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>      xip <span class="op">=</span> x <span class="op">-</span> step</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>      intervalos.append([xip, xi_1p])</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>      historial.append({<span class="st">"Iterations"</span>: iterations, <span class="st">"xi"</span>: <span class="bu">round</span>(xip,<span class="dv">4</span>), <span class="st">"xi+1"</span>: <span class="bu">round</span>(xi_1p,<span class="dv">4</span>), <span class="st">"f(xi)"</span>: <span class="bu">round</span>(fi_p,<span class="dv">4</span>), <span class="st">"f(xi+1)"</span>: <span class="bu">round</span>(fi_1_p,<span class="dv">4</span>), <span class="st">"Raíz"</span>: <span class="st">"Found in Positive side"</span>})</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>      xi_1p <span class="op">=</span> x</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>      xip <span class="op">=</span> x <span class="op">-</span> step</span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>      historial.append({<span class="st">"Iterations"</span>: iterations, <span class="st">"xi"</span>: <span class="bu">round</span>(xip,<span class="dv">4</span>), <span class="st">"xi+1"</span>: <span class="bu">round</span>(xi_1p,<span class="dv">4</span>), <span class="st">"f(xi)"</span>: <span class="bu">round</span>(fi_p,<span class="dv">4</span>), <span class="st">"f(xi+1)"</span>: <span class="bu">round</span>(fi_1_p,<span class="dv">4</span>), <span class="st">"Raíz"</span>: <span class="st">"Not Found"</span>})</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> f3<span class="op">*</span>f4 <span class="op">&lt;</span> <span class="dv">0</span>:</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>      flag <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>      xi_1n <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">*</span> x</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>      xin <span class="op">=</span> xi_1n <span class="op">+</span> step</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>      intervalos.append([xin, xi_1n])</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>      historial.append({<span class="st">"Iterations"</span>: iterations, <span class="st">"xi"</span>: <span class="bu">round</span>(xin,<span class="dv">4</span>), <span class="st">"xi+1"</span>: <span class="bu">round</span>(xi_1n,<span class="dv">4</span>), <span class="st">"f(xi)"</span>: <span class="bu">round</span>(fi_n,<span class="dv">4</span>), <span class="st">"f(xi+1)"</span>: <span class="bu">round</span>(fi_1_n,<span class="dv">4</span>), <span class="st">"Raíz"</span>: <span class="st">"Found in Negative side"</span>})</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>      xi_1n <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">*</span> x</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>      xin <span class="op">=</span> xi_1n <span class="op">+</span> step</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>      historial.append({<span class="st">"Iterations"</span>: iterations, <span class="st">"xi"</span>: <span class="bu">round</span>(xin,<span class="dv">4</span>), <span class="st">"xi+1"</span>: <span class="bu">round</span>(xi_1n,<span class="dv">4</span>), <span class="st">"f(xi)"</span>: <span class="bu">round</span>(fi_n,<span class="dv">4</span>), <span class="st">"f(xi+1)"</span>: <span class="bu">round</span>(fi_1_n,<span class="dv">4</span>), <span class="st">"Raíz"</span>: <span class="st">"Not found"</span>})</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    iterations <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">"¡Great! We have found all roots!"</span>)</span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">"Intervalos:"</span>, intervalos)</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> historial</span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejecución</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"f(x) = </span><span class="sc">{</span>a<span class="sc">}</span><span class="ss">x² + </span><span class="sc">{</span>b<span class="sc">}</span><span class="ss">x + </span><span class="sc">{</span>c<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>discriminant <span class="op">=</span> <span class="bu">pow</span>(b,<span class="dv">2</span>) <span class="op">-</span> (<span class="dv">4</span><span class="op">*</span>a<span class="op">*</span>c)</span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Discriminant: </span><span class="sc">{</span>discriminant<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> discriminant <span class="op">&lt;</span> <span class="dv">0</span>:</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"There aren't real roots"</span>)</span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> discriminant <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    historial <span class="op">=</span> searching(<span class="dv">1</span>, deltax)</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    historial <span class="op">=</span> searching(<span class="dv">2</span>, deltax)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ─── Quadratic parameters ──────────────────────────</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>A, B, C <span class="op">=</span> <span class="fl">2.0</span>, <span class="fl">6.0</span>, <span class="fl">2.0</span>   <span class="co"># f(x) = x² - 3x + 2</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> <span class="kw">lambda</span> x: A<span class="op">*</span>x<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> B<span class="op">*</span>x <span class="op">+</span> C</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ─── Analytical solution ───────────────────────────</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>discriminant <span class="op">=</span> B<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>A<span class="op">*</span>C</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>root1 <span class="op">=</span> (<span class="op">-</span>B <span class="op">+</span> np.sqrt(discriminant)) <span class="op">/</span> (<span class="dv">2</span><span class="op">*</span>A)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>root2 <span class="op">=</span> (<span class="op">-</span>B <span class="op">-</span> np.sqrt(discriminant)) <span class="op">/</span> (<span class="dv">2</span><span class="op">*</span>A)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"f(x) = </span><span class="sc">{</span>A<span class="sc">}</span><span class="ss">x² - </span><span class="sc">{</span>B<span class="sc">}</span><span class="ss">x + </span><span class="sc">{</span>C<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Analytical roots: x₁ = </span><span class="sc">{</span>root1<span class="sc">}</span><span class="ss">, x₂ = </span><span class="sc">{</span>root2<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># ─── Bisection setup ───────────────────────────────</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>a, b <span class="op">=</span> <span class="fl">1.5</span>, <span class="fl">3.0</span>    <span class="co"># interval containing root1</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> root1       <span class="co"># exact root for error comparison</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>epsilon <span class="op">=</span> <span class="fl">1e-6</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bisection(f, a, b, epsilon, alpha):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    historial <span class="op">=</span> []</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    n_min <span class="op">=</span> np.ceil((np.log(b <span class="op">-</span> a) <span class="op">-</span> np.log(epsilon)) <span class="op">/</span> np.log(<span class="dv">2</span>))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Minimum iterations required: </span><span class="sc">{</span><span class="bu">int</span>(n_min)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        sn <span class="op">=</span> (a <span class="op">+</span> b) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        fsn <span class="op">=</span> f(sn)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        en_bound <span class="op">=</span> (b <span class="op">-</span> a) <span class="op">/</span> <span class="dv">2</span>              <span class="co"># theoretical bound</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        en_real  <span class="op">=</span> <span class="bu">abs</span>(sn <span class="op">-</span> alpha)          <span class="co"># real error</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        historial.append({</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">"n"</span>: n,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">"a"</span>: <span class="bu">round</span>(a, <span class="dv">6</span>),</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">"b"</span>: <span class="bu">round</span>(b, <span class="dv">6</span>),</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">"sn"</span>: <span class="bu">round</span>(sn, <span class="dv">6</span>),</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="st">"f(sn)"</span>: <span class="bu">round</span>(fsn, <span class="dv">6</span>),</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Theoretical bound"</span>: <span class="bu">round</span>(en_bound, <span class="dv">8</span>),</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Real error"</span>: <span class="bu">round</span>(en_real, <span class="dv">8</span>),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> fsn <span class="op">==</span> <span class="dv">0</span> <span class="kw">or</span> en_bound <span class="op">&lt;</span> epsilon:</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"Root found: sn = </span><span class="sc">{</span>sn<span class="sc">:.8f}</span><span class="ss"> after </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss"> iterations"</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> f(a) <span class="op">*</span> fsn <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>            b <span class="op">=</span> sn</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>            a <span class="op">=</span> sn</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        n <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sn, pd.DataFrame(historial)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>root, df <span class="op">=</span> bisection(f, a, b, epsilon, alpha)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>f(x) = 1.0x² + -3.0x + 2.0
-Discriminant: 1.0
-¡Great! We have found all roots!
-Intervalos: [[0.9999999999999999, 1.0999999999999999], [1.9000000000000004, 2.0000000000000004]]</code></pre>
+<pre><code>f(x) = 2.0x² - 6.0x + 2.0
+Analytical roots: x₁ = -0.3819660112501051, x₂ = -2.618033988749895
+Minimum iterations required: 21
+Root found: sn = 2.99999928 after 21 iterations</code></pre>
 </div>
 </div>
 </section>
 <section id="iterations" class="level2">
 <h2 class="anchored" data-anchor-id="iterations">Iterations</h2>
-<div id="149b683b" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display" data-execution_count="14">
+<div id="d767994c" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -399,374 +418,225 @@ Intervalos: [[0.9999999999999999, 1.0999999999999999], [1.9000000000000004, 2.00
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Iterations</th>
-<th data-quarto-table-cell-role="th">xi</th>
-<th data-quarto-table-cell-role="th">xi+1</th>
-<th data-quarto-table-cell-role="th">f(xi)</th>
-<th data-quarto-table-cell-role="th">f(xi+1)</th>
-<th data-quarto-table-cell-role="th">Raíz</th>
+<th data-quarto-table-cell-role="th">n</th>
+<th data-quarto-table-cell-role="th">a</th>
+<th data-quarto-table-cell-role="th">b</th>
+<th data-quarto-table-cell-role="th">sn</th>
+<th data-quarto-table-cell-role="th">f(sn)</th>
+<th data-quarto-table-cell-role="th">Theoretical bound</th>
+<th data-quarto-table-cell-role="th">Real error</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
-<td>0</td>
-<td>0.0</td>
-<td>0.1</td>
-<td>2.00</td>
-<td>1.71</td>
-<td>Not Found</td>
+<td>1</td>
+<td>1.500000</td>
+<td>3.0</td>
+<td>2.250000</td>
+<td>25.625000</td>
+<td>7.500000e-01</td>
+<td>2.631966</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>0</td>
-<td>0.0</td>
-<td>-0.1</td>
-<td>2.00</td>
-<td>2.31</td>
-<td>Not found</td>
+<td>2</td>
+<td>2.250000</td>
+<td>3.0</td>
+<td>2.625000</td>
+<td>31.531250</td>
+<td>3.750000e-01</td>
+<td>3.006966</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>1</td>
-<td>0.1</td>
-<td>0.2</td>
-<td>1.71</td>
-<td>1.44</td>
-<td>Not Found</td>
+<td>3</td>
+<td>2.625000</td>
+<td>3.0</td>
+<td>2.812500</td>
+<td>34.695312</td>
+<td>1.875000e-01</td>
+<td>3.194466</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
-<td>1</td>
-<td>-0.1</td>
-<td>-0.2</td>
-<td>2.31</td>
-<td>2.64</td>
-<td>Not found</td>
+<td>4</td>
+<td>2.812500</td>
+<td>3.0</td>
+<td>2.906250</td>
+<td>36.330078</td>
+<td>9.375000e-02</td>
+<td>3.288216</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
-<td>2</td>
-<td>0.2</td>
-<td>0.3</td>
-<td>1.44</td>
-<td>1.19</td>
-<td>Not Found</td>
+<td>5</td>
+<td>2.906250</td>
+<td>3.0</td>
+<td>2.953125</td>
+<td>37.160645</td>
+<td>4.687500e-02</td>
+<td>3.335091</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">5</th>
-<td>2</td>
-<td>-0.2</td>
-<td>-0.3</td>
-<td>2.64</td>
-<td>2.99</td>
-<td>Not found</td>
+<td>6</td>
+<td>2.953125</td>
+<td>3.0</td>
+<td>2.976562</td>
+<td>37.579224</td>
+<td>2.343750e-02</td>
+<td>3.358529</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">6</th>
-<td>3</td>
-<td>0.3</td>
-<td>0.4</td>
-<td>1.19</td>
-<td>0.96</td>
-<td>Not Found</td>
+<td>7</td>
+<td>2.976562</td>
+<td>3.0</td>
+<td>2.988281</td>
+<td>37.789337</td>
+<td>1.171875e-02</td>
+<td>3.370247</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">7</th>
-<td>3</td>
-<td>-0.3</td>
-<td>-0.4</td>
-<td>2.99</td>
-<td>3.36</td>
-<td>Not found</td>
+<td>8</td>
+<td>2.988281</td>
+<td>3.0</td>
+<td>2.994141</td>
+<td>37.894600</td>
+<td>5.859380e-03</td>
+<td>3.376107</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">8</th>
-<td>4</td>
-<td>0.4</td>
-<td>0.5</td>
-<td>0.96</td>
-<td>0.75</td>
-<td>Not Found</td>
+<td>9</td>
+<td>2.994141</td>
+<td>3.0</td>
+<td>2.997070</td>
+<td>37.947283</td>
+<td>2.929690e-03</td>
+<td>3.379036</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">9</th>
-<td>4</td>
-<td>-0.4</td>
-<td>-0.5</td>
-<td>3.36</td>
-<td>3.75</td>
-<td>Not found</td>
+<td>10</td>
+<td>2.997070</td>
+<td>3.0</td>
+<td>2.998535</td>
+<td>37.973637</td>
+<td>1.464840e-03</td>
+<td>3.380501</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">10</th>
-<td>5</td>
-<td>0.5</td>
-<td>0.6</td>
-<td>0.75</td>
-<td>0.56</td>
-<td>Not Found</td>
+<td>11</td>
+<td>2.998535</td>
+<td>3.0</td>
+<td>2.999268</td>
+<td>37.986817</td>
+<td>7.324200e-04</td>
+<td>3.381234</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">11</th>
-<td>5</td>
-<td>-0.5</td>
-<td>-0.6</td>
-<td>3.75</td>
-<td>4.16</td>
-<td>Not found</td>
+<td>12</td>
+<td>2.999268</td>
+<td>3.0</td>
+<td>2.999634</td>
+<td>37.993408</td>
+<td>3.662100e-04</td>
+<td>3.381600</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">12</th>
-<td>6</td>
-<td>0.6</td>
-<td>0.7</td>
-<td>0.56</td>
-<td>0.39</td>
-<td>Not Found</td>
+<td>13</td>
+<td>2.999634</td>
+<td>3.0</td>
+<td>2.999817</td>
+<td>37.996704</td>
+<td>1.831100e-04</td>
+<td>3.381783</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">13</th>
-<td>6</td>
-<td>-0.6</td>
-<td>-0.7</td>
-<td>4.16</td>
-<td>4.59</td>
-<td>Not found</td>
+<td>14</td>
+<td>2.999817</td>
+<td>3.0</td>
+<td>2.999908</td>
+<td>37.998352</td>
+<td>9.155000e-05</td>
+<td>3.381874</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">14</th>
-<td>7</td>
-<td>0.7</td>
-<td>0.8</td>
-<td>0.39</td>
-<td>0.24</td>
-<td>Not Found</td>
+<td>15</td>
+<td>2.999908</td>
+<td>3.0</td>
+<td>2.999954</td>
+<td>37.999176</td>
+<td>4.578000e-05</td>
+<td>3.381920</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">15</th>
-<td>7</td>
-<td>-0.7</td>
-<td>-0.8</td>
-<td>4.59</td>
-<td>5.04</td>
-<td>Not found</td>
+<td>16</td>
+<td>2.999954</td>
+<td>3.0</td>
+<td>2.999977</td>
+<td>37.999588</td>
+<td>2.289000e-05</td>
+<td>3.381943</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">16</th>
-<td>8</td>
-<td>0.8</td>
-<td>0.9</td>
-<td>0.24</td>
-<td>0.11</td>
-<td>Not Found</td>
+<td>17</td>
+<td>2.999977</td>
+<td>3.0</td>
+<td>2.999989</td>
+<td>37.999794</td>
+<td>1.144000e-05</td>
+<td>3.381955</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">17</th>
-<td>8</td>
-<td>-0.8</td>
-<td>-0.9</td>
-<td>5.04</td>
-<td>5.51</td>
-<td>Not found</td>
+<td>18</td>
+<td>2.999989</td>
+<td>3.0</td>
+<td>2.999994</td>
+<td>37.999897</td>
+<td>5.720000e-06</td>
+<td>3.381960</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">18</th>
-<td>9</td>
-<td>0.9</td>
-<td>1.0</td>
-<td>0.11</td>
-<td>0.00</td>
-<td>Not Found</td>
+<td>19</td>
+<td>2.999994</td>
+<td>3.0</td>
+<td>2.999997</td>
+<td>37.999949</td>
+<td>2.860000e-06</td>
+<td>3.381963</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">19</th>
-<td>9</td>
-<td>-0.9</td>
-<td>-1.0</td>
-<td>5.51</td>
-<td>6.00</td>
-<td>Not found</td>
+<td>20</td>
+<td>2.999997</td>
+<td>3.0</td>
+<td>2.999999</td>
+<td>37.999974</td>
+<td>1.430000e-06</td>
+<td>3.381965</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">20</th>
-<td>10</td>
-<td>1.0</td>
-<td>1.1</td>
-<td>0.00</td>
-<td>-0.09</td>
-<td>Found in Positive side</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">21</th>
-<td>10</td>
-<td>-1.0</td>
-<td>-1.1</td>
-<td>6.00</td>
-<td>6.51</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">22</th>
-<td>11</td>
-<td>1.1</td>
-<td>1.2</td>
-<td>-0.09</td>
-<td>-0.16</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">23</th>
-<td>11</td>
-<td>-1.1</td>
-<td>-1.2</td>
-<td>6.51</td>
-<td>7.04</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">24</th>
-<td>12</td>
-<td>1.2</td>
-<td>1.3</td>
-<td>-0.16</td>
-<td>-0.21</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">25</th>
-<td>12</td>
-<td>-1.2</td>
-<td>-1.3</td>
-<td>7.04</td>
-<td>7.59</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">26</th>
-<td>13</td>
-<td>1.3</td>
-<td>1.4</td>
-<td>-0.21</td>
-<td>-0.24</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">27</th>
-<td>13</td>
-<td>-1.3</td>
-<td>-1.4</td>
-<td>7.59</td>
-<td>8.16</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">28</th>
-<td>14</td>
-<td>1.4</td>
-<td>1.5</td>
-<td>-0.24</td>
-<td>-0.25</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">29</th>
-<td>14</td>
-<td>-1.4</td>
-<td>-1.5</td>
-<td>8.16</td>
-<td>8.75</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">30</th>
-<td>15</td>
-<td>1.5</td>
-<td>1.6</td>
-<td>-0.25</td>
-<td>-0.24</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">31</th>
-<td>15</td>
-<td>-1.5</td>
-<td>-1.6</td>
-<td>8.75</td>
-<td>9.36</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">32</th>
-<td>16</td>
-<td>1.6</td>
-<td>1.7</td>
-<td>-0.24</td>
-<td>-0.21</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">33</th>
-<td>16</td>
-<td>-1.6</td>
-<td>-1.7</td>
-<td>9.36</td>
-<td>9.99</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">34</th>
-<td>17</td>
-<td>1.7</td>
-<td>1.8</td>
-<td>-0.21</td>
-<td>-0.16</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">35</th>
-<td>17</td>
-<td>-1.7</td>
-<td>-1.8</td>
-<td>9.99</td>
-<td>10.64</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">36</th>
-<td>18</td>
-<td>1.8</td>
-<td>1.9</td>
-<td>-0.16</td>
-<td>-0.09</td>
-<td>Not Found</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">37</th>
-<td>18</td>
-<td>-1.8</td>
-<td>-1.9</td>
-<td>10.64</td>
-<td>11.31</td>
-<td>Not found</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">38</th>
-<td>19</td>
-<td>1.9</td>
-<td>2.0</td>
-<td>-0.09</td>
-<td>0.00</td>
-<td>Found in Positive side</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">39</th>
-<td>19</td>
-<td>-1.9</td>
-<td>-2.0</td>
-<td>11.31</td>
-<td>12.00</td>
-<td>Not found</td>
+<td>21</td>
+<td>2.999999</td>
+<td>3.0</td>
+<td>2.999999</td>
+<td>37.999987</td>
+<td>7.200000e-07</td>
+<td>3.381965</td>
 </tr>
 </tbody>
 </table>
@@ -775,14 +645,47 @@ Intervalos: [[0.9999999999999999, 1.0999999999999999], [1.9000000000000004, 2.00
 </div>
 </div>
 </section>
-<section id="visualization" class="level2">
-<h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
-<div id="abdd66d3" class="cell" data-execution_count="3">
+<section id="error-convergence" class="level2">
+<h2 class="anchored" data-anchor-id="error-convergence">Error Convergence</h2>
+<div id="a1fc3dfc" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display">
 <div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
-        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="98adee79-0d94-4021-900c-4bee30682191" class="plotly-graph-div" style="height:500px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("98adee79-0d94-4021-900c-4bee30682191")) {                    Plotly.newPlot(                        "98adee79-0d94-4021-900c-4bee30682191",                        [{"line":{"color":"#4e79a7","width":3},"mode":"lines","name":"f(x)","x":{"dtype":"f8","bdata":"MzMzMzMzB8CqcHaPpgoHwCGuuesZ4gbAmev8R425BsAQKUCkAJEGwIdmgwB0aAbA\u002fqPGXOc\u002fBsB24Qm5WhcGwO0eTRXO7gXAZFyQcUHGBcDbmdPNtJ0FwFLXFioodQXAyhRahptMBcBBUp3iDiQFwLiP4D6C+wTAL80jm\u002fXSBMCmCmf3aKoEwB5IqlPcgQTAlYXtr09ZBMAMwzAMwzAEwIMAdGg2CATA+j23xKnfA8Bye\u002fogHbcDwOm4PX2QjgPAYPaA2QNmA8DXM8Q1dz0DwE5xB5LqFAPAxq5K7l3sAsA97I1K0cMCwLQp0aZEmwLAK2cUA7hyAsCipFdfK0oCwBrimrueIQLAkR\u002feFxL5AcAIXSF0hdABwICaZND4pwHA9tenLGx\u002fAcBuFeuI31YBwOVSLuVSLgHAXJBxQcYFAcDUzbSdOd0AwEsL+PmstADAwkg7ViCMAMA5hn6yk2MAwLDDwQ4HOwDAKAEFa3oSAMA+fZCO29P\u002fvyz4FkfCgv+\u002fGnOd\u002f6gx\u002f78I7iO4j+D+v\u002fdoqnB2j\u002f6\u002f5uMwKV0+\u002fr\u002fUXrfhQ+39v8LZPZoqnP2\u002fsVTEUhFL\u002fb+fz0oL+Pn8v45K0cPeqPy\u002ffMVXfMVX\u002fL9qQN40rAb8v1m7ZO2Stfu\u002fRzbrpXlk+782sXFeYBP7vyQs+BZHwvq\u002fE6d+zy1x+r8BIgWIFCD6v++ci0D7zvm\u002f3hcS+eF9+b\u002fMkpixyCz5v7sNH2qv2\u002fi\u002fqYilIpaK+L+YAyzbfDn4v4Z+spNj6Pe\u002fdPk4TEqX979jdL8EMUb3v1HvRb0X9fa\u002fQGrMdf6j9r8u5VIu5VL2vxxg2ebLAfa\u002fC9tfn7Kw9b\u002f5VeZXmV\u002f1v+jQbBCADvW\u002f1kvzyGa99L\u002fFxnmBTWz0v7NBADo0G\u002fS\u002fobyG8hrK87+QNw2rAXnzv36yk2PoJ\u002fO\u002fbS0aHM\u002fW8r9bqKDUtYXyv0ojJ42cNPK\u002fOJ6tRYPj8b8mGTT+aZLxvxWUurZQQfG\u002fAw9Bbzfw8L\u002fyiccnHp\u002fwv+AETuAETvC\u002fnP+oMdf577969bWipFfvv1brwhNyte6\u002fNOHPhD8T7r8Q19z1DHHtv+7M6Wbazuy\u002fzML216cs7L+ouANJdYrrv4SuELpC6Oq\u002fYKQdKxBG6r88miqc3aPpvxyQNw2rAem\u002f+IVEfnhf6L\u002fUe1HvRb3nv7BxXmATG+e\u002fjGdr0eB45r9sXXhCrtblv0hThbN7NOW\u002fJEmSJEmS5L8AP5+VFvDjv9w0rAbkTeO\u002fvCq5d7Gr4r+YIMbofgniv3QW01lMZ+G\u002fUAzgyhnF4L8wAu075yLgvxjw81lpAd+\u002f0NsNPAS93b+Ixycen3jcv0CzQQA6NNu\u002fAJ9b4tTv2b+4inXEb6vYv3B2j6YKZ9e\u002fKGKpiKUi1r\u002fgTcNqQN7Uv6A53UzbmdO\u002fWCX3LnZV0r8QERERERHRv5D5VeZXmc+\u002fANGJqo0Qzb+AqL1uw4fKv\u002fB\u002f8TL5\u002fse\u002fYFcl9y52xb\u002fQLlm7ZO3Cv1AGjX+aZMC\u002fgLuBh6C3u79gaukPDKa2v0AZUZh3lLG\u002fQJBxQcYFqb+A3IGkOsWdvwAwQYzR\u002fYK\u002fAFmBMNKOhT8A8aH2ug2fP8CagWoGqqk\u002fYB7ZrJfmsT+Ab3EkLPi2P6DACZzACbw\u002f4AjRiaqNwD9wMZ3FdBbDP\u002fBZaQE\u002fn8U\u002fgII1PQkoyD8QqwF507DKP6DTzbSdOc0\u002fIPyZ8GfCzz9YEjMWmSXRP6AmGTT+adI\u002f6Dr\u002fUWOu0z8wT+VvyPLUP3Bjy40tN9Y\u002fuHexq5J71z8AjJfJ97\u002fYP0igfedcBNo\u002fkLRjBcJI2z\u002fQyEkjJ43cPxjdL0GM0d0\u002fYPEVX\u002fEV3z\u002fUAn4+Ky3gP\u002fgMcc1dz+A\u002fGBdkXJBx4T88IVfrwhPiP2ArSnr1teI\u002fhDU9CShY4z+kPzCYWvrjP8hJIyeNnOQ\u002f7FMWtr8+5T8QXglF8uDlPzRo\u002fNMkg+Y\u002fVHLvYlcl5z94fOLxicfnP5yG1YC8aeg\u002fwJDID+8L6T\u002fkmrueIa7pPwSlri1UUOo\u002fKK+hvIby6j9MuZRLuZTrP3DDh9rrNuw\u002flM16aR7Z7D+01234UHvtP9jhYIeDHe4\u002f\u002fOtTFra\u002f7j8g9kal6GHvPyAAHZoNAvA\u002fMoWW4SZT8D9EChApQKTwP1aPiXBZ9fA\u002faBQDuHJG8T94mXz\u002fi5fxP4oe9kal6PE\u002fmqNvjr458j+uKOnV14ryP76tYh3x2\u002fI\u002f0jLcZAot8z\u002fit1WsI37zP\u002fI8z\u002fM8z\u002fM\u002fBsJIO1Yg9D8WR8KCb3H0PyrMO8qIwvQ\u002fOlG1EaIT9T9K1i5Zu2T1P15bqKDUtfU\u002fbuAh6O0G9j+CZZsvB1j2P5LqFHcgqfY\u002fom+Ovjn69j+29AcGU0v3P8Z5gU1snPc\u002f2v76lIXt9z\u002fqg3Tcnj74P\u002foI7iO4j\u002fg\u002fDo5na9Hg+D8eE+Gy6jH5PzKYWvoDg\u002fk\u002fQh3UQR3U+T9Sok2JNiX6P2Ynx9BPdvo\u002fdqxAGGnH+j+KMbpfghj7P5q2M6ebafs\u002fqjut7rS6+z++wCY2zgv8P85FoH3nXPw\u002f4soZxQCu\u002fD\u002fyT5MMGv\u002f8PwLVDFQzUP0\u002fFlqGm0yh\u002fT8m3\u002f\u002fiZfL9PzZkeSp\u002fQ\u002f4\u002fSunycZiU\u002fj9abmy5seX+P27z5QDLNv8\u002ffnhfSOSH\u002fz+O\u002fdiP\u002fdj\u002fP1FBqWsLFQBA2QNmD5g9AEBjxiKzJGYAQOuI31axjgBAc0uc+j23AED9DVmeyt8AQIXQFUJXCAFAD5PS5eMwAUCXVY+JcFkBQB8YTC39gQFAqdoI0YmqAUAxncV0FtMBQLtfghij+wFAQyI\u002fvC8kAkDL5PtfvEwCQFWnuANJdQJA3Wl1p9WdAkBnLDJLYsYCQO\u002fu7u7u7gJAd7GrknsXA0ABdGg2CEADQIk2JdqUaANAE\u002fnhfSGRA0Cbu54hrrkDQCN+W8U64gNArUAYaccKBEA1A9UMVDMEQL3FkbDgWwRAR4hOVG2EBEDPSgv4+awEQFkNyJuG1QRA4c+EPxP+BEBpkkHjnyYFQPNU\u002foYsTwVAexe7Krl3BUAF2nfORaAFQI2cNHLSyAVAFV\u002fxFV\u002fxBUCfIa656xkGQCfkal14QgZAsaYnAQVrBkA5aeSkkZMGQMEroUgevAZAS+5d7KrkBkDTsBqQNw0HQF1z1zPENQdA5TWU11BeB0Bt+FB73YYHQPe6DR9qrwdAf33KwvbXB0AJQIdmgwAIQJECRAoQKQhAGcUArpxRCECjh71RKXoIQCtKevW1oghAtQw3mULLCEA9z\u002fM8z\u002fMIQMWRsOBbHAlAT1RthOhECUDXFioodW0JQGHZ5ssBlglA6Zujb46+CUBxXmATG+cJQPsgHbenDwpAg+PZWjQ4CkALppb+wGAKQJVoU6JNiQpAHSsQRtqxCkCn7czpZtoKQC+wiY3zAgtAt3JGMYArC0BBNQPVDFQLQMn3v3iZfAtAU7p8HCalC0DbfDnAss0LQGM\u002f9mM\u002f9gtA7QGzB8weDEB1xG+rWEcMQP+GLE\u002flbwxAh0np8nGYDEAPDKaW\u002fsAMQJnOYjqL6QxAIZEf3hcSDUCrU9yBpDoNQDMWmSUxYw1Au9hVyb2LDUBFmxJtSrQNQM1dzxDX3A1AVyCMtGMFDkDf4khY8C0OQGelBfx8Vg5A8WfCnwl\u002fDkB5Kn9DlqcOQAPtO+ci0A5Ai6\u002f4iq\u002f4DkATcrUuPCEPQJ00ctLISQ9AJfcudlVyD0CvuesZ4poPQDd8qL1uww9Avz5lYfvrD0CkAJECRAoQQOhhb1SKHhBALMNNptAyEEByJCz4FkcQQLaFCkpdWxBA+ubom6NvEEA+SMft6YMQQIKppT8wmBBAyAqEkXasEEAMbGLjvMAQQFDNQDUD1RBAlC4fh0npEEDYj\u002f3Yj\u002f0QQB7x2yrWERFAYlK6fBwmEUCms5jOYjoRQOoUdyCpThFALnZVcu9iEUB01zPENXcRQLg4EhZ8ixFA\u002fJnwZ8KfEUBA+865CLQRQIRcrQtPyBFAyr2LXZXcEUAOH2qv2\u002fARQFKASAEiBRJAluEmU2gZEkDaQgWlri0SQCCk4\u002fb0QRJAZAXCSDtWEkCoZqCagWoSQOzHfuzHfhJAMCldPg6TEkB2ijuQVKcSQLrrGeKauxJA\u002fkz4M+HPEkBCrtaFJ+QSQIYPtddt+BJAzHCTKbQME0AQ0nF7+iATQFQzUM1ANRNAmJQuH4dJE0Dc9QxxzV0TQCJX68ITchNAZrjJFFqGE0CqGahmoJoTQO56hrjmrhNAMtxkCi3DE0B4PUNcc9cTQLyeIa656xNAAAAAAAAAFEA="},"y":{"dtype":"f8","bdata":"XI\u002fC9SgcM0C22afyp+8yQO6XkFFawzJACMp8EkCXMkAAcGw1WWsyQNmJX7qlPzJAkRdWoSUUMkAqGVDq2OgxQKKOTZW\u002fvTFA+ndOotmSMUAx1VIRJ2gxQEimWuKnPTFAQOtlFVwTMUAXpHSqQ+kwQM3QhqFevzBAZHGc+qyVMEDahbW1LmwwQDEO0tLjQjBAZwryUcwZMED49Cpm0OEvQOK8eOxukC9AjWzNNnQ\u002fL0D5AylF4O4uQCKDixezni5AC+r0rexOLkC0OGUIjf8tQBxv3CaUsC1ARo1aCQJiLUAuk9+v1hMtQNSAaxoSxixAOlb+SLR4LEBhE5g7vSssQEi4OPIs3ytA7kTgbAOTK0BSuY6rQEcrQHkVRK7k+ypAXFkAde+wKkABhcP\u002fYGYqQGSYjU45HCpAh5NeYXjSKUBsdjY4HokpQA1BFdMqQClAb\u002fP6MZ73KECQjedUeK8oQHEP2zu5ZyhAFHnV5mAgKEBzytZVb9knQJMD34jkkidAciTuf8BMJ0ARLQQ7AwcnQHAdIbqswSZAj\u002fVE\u002fbx8JkBttW8ENDgmQApdoc8R9CVAaOzZXlawJUCEYxmyAW0lQGDCX8kTKiVA\u002fAitpIznJEBYNwFEbKUkQHNNXKeyYyRATUu+zl8iJEDoMCe6c+EjQEH+lmnuoCNAW7MN3c9gI0A0UIsUGCEjQMzUDxDH4SJAJEGbz9yiIkA8lS1TWWQiQBTRxpo8JiJAq\u002fRmpoboIUACAA52N6shQBfzuwlPbiFA7c1wYc0xIUCDkCx9svUgQNg671z+uSBA7My4ALF+IEDARoloykMgQFSoYJRKCSBATuN9CGOeH0B0RUhw\u002fiofQBl3IGBnuB5APHgG2J1GHkDhSPrXodUdQALp+19zZR1ApFgLcBL2HEDFlygIf4ccQGSmUyi5GRxAhYSM0MCsG0AiMtMAlkAbQECvJ7k41RpA3fuJ+ahqGkD4F\u002frB5gAaQJQDeBLylxlArb4D68ovGUBISZ1LccgYQGCjRDTlYRhA98z5pCb8F0APxrydNZcXQKSOjR4SMxdAuiZsJ7zPFkBOjli4M20WQGLFUtF4CxZA9stacouqFUAIonCba0oVQJhHlEwZ6xRAqLzFhZSMFEA4AQVH3S4UQEgVUpDz0RNA1visYdd1E0DiqxW7iBoTQG4ujJwHwBJAeYAQBlRmEkAGoqL3bQ0SQA6TQnFVtRFAl1PwcgpeEUCf46v8jAcRQCZDdQ7dsRBALnJMqPpcEEC0cDHK5QgQQHB9SOg8aw9Ad7hJTEnGDkCAkmbA8CIOQIQLn0QzgQ1AhyPz2BDhDECI2mJ9iUIMQIcw7jGdpQtAiCWV9ksKC0CEuVfLlXAKQH7sNbB62AlAd74vpfpBCUBuL0WqFa0IQGc\u002fdr\u002fLGQhAW+7C5ByIB0BNPCsaCfgGQD0pr1+QaQZALLVOtbLcBUAd4AkbcFEFQAiq4JDIxwRA8hLTFrw\u002fBEDbGuGsSrkDQMTBClN0NANAqgdQCTmxAkCN7LDPmC8CQG9wLaaTrwFAT5PFjCkxAUAwVXmDWrQAQA22SIomOQBA0WtnQht\u002f\u002fz+EqXSQH4\u002f+PzQluf5Zov0\u002f5t40jcq4\u002fD+Q1uc7cdL7PzYM0gpO7\u002fo\u002f2X\u002fz+WAP+j94MUwJqjL5Pxoh3DgpWfg\u002ftE6jiN6C9z9JuqH4ya\u002f2P9xj14jr3\u002fU\u002fcEtEOUMT9T\u002f8cOgJ0Un0P4TUw\u002fqUg\u002fM\u002fCnbWC4\u002fA8j+MVSA9vwDyPxBzoY4lRPE\u002fjM5ZAMKK8D8I0JIkKanvP\u002fJ+4Ig6Q+4\u002f1qmcLbjj7D+8UMcSoorrP5JzYDj4N+o\u002fZBJonrrr6D8sLd5E6aXnP\u002fDDwiuEZuY\u002ftNYVU4st5T9qZde6\u002fvrjPxpwB2PezuI\u002fxPalSyqp4T9s+bJ04ongPxDwXLwN4t4\u002fPOUwEC+93D9Y0uHkKKXaP2i3bzr7mdg\u002feJTaEKab1j9waSJoKarUP1g2R0CFxdI\u002fOPtImbnt0D8QcE\u002fmjEXOP6jZxptXyco\u002fEDP4UtNmxz9gfOMLAB7EP5i1iMbd7sA\u002fYL3PBdmyuz+Q7wGCWLu1P8ACUAN07q8\u002fAOaDCfvMpD+AET8tjCSUPwAgRVe1akC\u002fAOXjdK9dlL8AEZ+YQLWjv8Bv5G\u002fl1Ky\u002fgAchIOPGsr9A99uE8e+2v0AHI+ad5bq\u002fYDf2Q+invr8AxCpPaBvBv0B8oHorycK\u002fsERcpD1dxL8wHV7MntfFv8AFpvJOOMe\u002fgP4zF05\u002fyL9gBwg6nKzJv0AgIls5wMq\u002fUEmCeiW6y7+AgiiYYJrMv6DLFLTqYM2\u002f8CRHzsMNzr+Ajr\u002fm66DOvxAIfv1iGs+\u002fsJGCEil6z79QK80lPsDPvyDVXTei7M+\u002fQI80R1X\u002fz79AWVFVV\u002fjPv3AztGGo18+\u002fkB1dbEidz7\u002fwF0x1N0nPv4AigXx1286\u002fED38gQJUzr\u002fAZ72F3rLNv2CixIcJ+My\u002fQO0RiIMjzL9gSKWGTDXLv3CzfoNkLcq\u002foC6efssLyb\u002fAuQN4gdDHvzBVr2+Ge8a\u002fwAChZdoMxb9gvNhZfYTDvyCIVkxv4sG\u002fwGMaPbAmwL9gn0hYgKK8v2CX6DI+xLi\u002fwK8UCpqytL9A6Mzdk22wvwCBIlxX6qe\u002fgOWG64Ulnb8AlPIhqlGDvwCix67HQoU\u002fAGqQzSS5nz8AQ8boNs+qP4AH1rhPFLM\u002fQM28AGb0uD8AcxdM3ge\u002fPyD8ck1cp8I\u002fAC+UdnrkxT+AUW+hSTvJPwBkBM7Jq8w\u002fILMpfv0a0D9ALC6W7uzRP3CdDy+4y9M\u002fcAbOSFq31T9gZ2nj1K\u002fXP0DA4f4ntdk\u002fIBE3m1PH2z8QWmm4V+bdP2BNPCsaCeA\u002fuGmyunQl4T8QApeKO0jiP1gW6ppuceM\u002fsKar6w2h5D\u002fwstt8GdflPyA7ek6RE+c\u002fWD+HYHVW6D+AvwKzxZ\u002fpP6C77EWC7+o\u002f0DNFGatF7D\u002foJwwtQKLtP\u002fiXQYFBBe8\u002fAMLyilc38D8A9nt1RO\u002fwPwxoPIBnqvE\u002fBBg0q8Bo8j8ABmP2TyrzP\u002fAxyWEV7\u002fM\u002f4Jtm7RC39D\u002fYQzuZQoL1P8ApR2WqUPY\u002frE2KUUgi9z+QrwReHPf3P3BPtoomz\u002fg\u002fWC2f12aq+T8wSb9E3Yj6PwijFtKJavs\u002f2Dqlf2xP\u002fD+oEGtNhTf9P4AkaDvUIv4\u002fSHacSVkR\u002fz8IAwQ8igEAQOhpVeMCfABAyG\u002fCmhb4AECsFEtixXUBQIhY7zkP9QFAZDuvIfR1AkA8vYoZdPgCQBTegSGPfANA8J2UOUUCBEDE\u002fMJhlokEQJj6DJqCEgVAaJdy4gmdBUA00\u002fM6LCkGQAyukKPptgZA1CdJHEJGB0CcQB2lNdcHQGj4DD7EaQhAME8Y5+39CED8RD+gspMJQMDZgWkSKwpAgA3gQg3ECkBE4Fkso14LQABS7yXU+gtAxGKgL6CYDECAEm1JBzgNQDRhVXMJ2Q1A9E5ZraZ7DkCo23j33h8PQGQHtFGyxQ9ACmkFXpA2EEDinT4bFYsQQDyihWBn4BBAEnbaLYc2EUBuGT2DdI0RQEKMrWAv5RFAls4rxrc9EkBs4LezDZcSQL7BUSkx8RJAlHL5JiJME0Dk8q6s4KcTQLRCcrpsBBRABmJDUMZhFEDUUCJu7b8UQCYPDxTiHhVA8pwJQqR+FUA++hH4M98VQAwnKDaRQBZAViNM\u002fLuiFkAk731KtAUXQGyKvSB6aRdAMvUKfw3OF0B8L2ZlbjMYQEA5z9OcmRhAhBJGypgAGUBSu8pIYmgZQJYzXU\u002f50BlAVnv93V06GkCakqv0j6QaQFp5Z5OPDxtApC8xulx7G0BktQhp9+cbQKAK7p9fVRxAXC\u002fhXpXDHECYI+KlmDIdQF7n8HRpoh1AmnoNzAcTHkBS3Terc4QeQI4PcBKt9h5ARhG2AbRpH0CI4gl5iN0fQJ7BNTwVKSBAunnt\u002f8xjIECUGayH654gQC6hcdNw2iBAjRA+41wWIUCnZxG3r1IhQH+m605pjyFAF83MqonMIUBv27TKEAoiQIzRo67+RyJAZK+ZVlOGIkD6dJbCDsUiQFAimvIwBCNAZrek5rlDI0BBNLaeqYMjQNeYzhoAxCNAK+XtWr0EJEA\u002fGRRf4UUkQBM1QSdshyRArDh1s13JJEAAJLADtgslQBL38Rd1TiVA5LE68JqRJUB2VIqMJ9UlQM3e4OwaGSZA3VA+EXVdJkCtqqL5NaImQD3sDaZd5yZAjRWAFuwsJ0CkJvlK4XInQHIfeUM9uSdAAAAAAAAAKEA="},"type":"scatter"},{"hovertemplate":"xi: %{x}\u003cbr\u003ef(xi): %{y}\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c","#e74c3c"],"size":8,"symbol":"circle"},"mode":"markers","name":"Evaluated points","x":{"dtype":"f8","bdata":"AAAAAAAAAAAAAAAAAAAAAJqZmZmZmbk\u002fmpmZmZmZub+amZmZmZnJP5qZmZmZmcm\u002fMzMzMzMz0z8zMzMzMzPTv5qZmZmZmdk\u002fmpmZmZmZ2b8AAAAAAADgPwAAAAAAAOC\u002fMzMzMzMz4z8zMzMzMzPjv2ZmZmZmZuY\u002fZmZmZmZm5r+amZmZmZnpP5qZmZmZmem\u002fzczMzMzM7D\u002fNzMzMzMzsvwAAAAAAAPA\u002fAAAAAAAA8L+amZmZmZnxP5qZmZmZmfG\u002fMzMzMzMz8z8zMzMzMzPzv83MzMzMzPQ\u002fzczMzMzM9L9mZmZmZmb2P2ZmZmZmZva\u002fAAAAAAAA+D8AAAAAAAD4v5qZmZmZmfk\u002fmpmZmZmZ+b8zMzMzMzP7PzMzMzMzM\u002fu\u002fzczMzMzM\u002fD\u002fNzMzMzMz8v2ZmZmZmZv4\u002fZmZmZmZm\u002fr8="},"y":{"dtype":"f8","bdata":"AAAAAAAAAEAAAAAAAAAAQFyPwvUoXPs\u002fexSuR+F6AkAK16NwPQr3Px+F61G4HgVACtejcD0K8z\u002fsUbgehesHQLgehetRuO4\u002f4XoUrkfhCkAAAAAAAADoPwAAAAAAAA5A7FG4HoXr4T+kcD0K16MQQPYoXI\u002fC9dg\u002fXI\u002fC9ShcEkC4HoXrUbjOPylcj8L1KBRAKVyPwvUovD8K16NwPQoWQAAAAAAAAAAAAAAAAAAAGEAK16NwPQq3vwrXo3A9ChpAexSuR+F6xL8pXI\u002fC9SgcQOF6FK5H4cq\u002fXI\u002fC9ShcHkC4HoXrUbjOv1K4HoXrUSBAAAAAAAAA0L8AAAAAAIAhQLgehetRuM6\u002fuB6F61G4IkDhehSuR+HKv3sUrkfh+iNAexSuR+F6xL9I4XoUrkclQArXo3A9Cre\u002fH4XrUbieJkA="},"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"shapes":[{"line":{"color":"gray","dash":"dash"},"opacity":0.5,"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"yaxis":{"title":{"text":"f(x)"},"range":[-1.25,10]},"xaxis":{"title":{"text":"x"},"range":[-2.9,5]},"legend":{"orientation":"h","y":-0.2},"font":{"color":"#ffffff"},"title":{"text":"Searching Method \u2014 f(x) = ax\u00b2 + bx + c"},"height":500,"plot_bgcolor":"rgba(0,0,0,0)","paper_bgcolor":"rgba(0,0,0,0)"},                        {"responsive": true}                    ).then(function(){
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="18ef4914-f305-48dc-aeec-f4eb43eb17e4" class="plotly-graph-div" style="height:450px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("18ef4914-f305-48dc-aeec-f4eb43eb17e4")) {                    Plotly.newPlot(                        "18ef4914-f305-48dc-aeec-f4eb43eb17e4",                        [{"line":{"color":"#4e79a7","dash":"dash","width":2},"marker":{"size":6},"mode":"lines+markers","name":"Theoretical bound (b-a)\u002f2\u207f","x":{"dtype":"i1","bdata":"AQIDBAUGBwgJCgsMDQ4PEBESExQV"},"y":{"dtype":"f8","bdata":"AAAAAAAA6D8AAAAAAADYPwAAAAAAAMg\u002fAAAAAAAAuD8AAAAAAACoPwAAAAAAAJg\u002fAAAAAAAAiD8j7phXAQB4PyPumFcBAGg\u002flzU1+fv\u002fVz+XNTX5+\u002f9HP5c1Nfn7\u002fzc\u002f+PlS7CYAKD82cRcG0f8XP7qCjtJ8AAg\u002fuoKO0nwA+D6pPLKgzf3nPqk8sqDN\u002fdc+qTyyoM39xz6pPLKgzf23PsGddr7AKKg+"},"type":"scatter"},{"line":{"color":"#3cdce7","width":2},"marker":{"size":6},"mode":"lines+markers","name":"Real error |sn - \u03b1|","x":{"dtype":"i1","bdata":"AQIDBAUGBwgJCgsMDQ4PEBESExQV"},"y":{"dtype":"f8","bdata":"ohEJMkQOBUCiEQkyRA4IQKIRCTJEjglAohEJMkROCkCiEQkyRK4KQKIRCTJE3gpAohEJMkT2CkAZ3rQyRAILQGYrszFECAtA++qJMkQLC0BOfkkyxAwLQPhHKTKEDQtARPnEMuQNC0BzBWcyFA4LQBM\u002fjDEsDgtAWqjKMTgOC0B1qZUyPg4LQItdTzJBDgtAljcsskIOC0CcpBpyQw4LQJanvdJDDgtA"},"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"yaxis":{"title":{"text":"Error"},"type":"log"},"legend":{"orientation":"h","y":-0.2},"font":{"color":"#ffffff"},"title":{"text":"Error Convergence \u2014 Bisection Method (\u03b1 = -0.3819660112501051)"},"xaxis":{"title":{"text":"Iteration n"}},"height":450,"plot_bgcolor":"rgba(0,0,0,0)","paper_bgcolor":"rgba(0,0,0,0)"},                        {"responsive": true}                    ).then(function(){
                             
-var gd = document.getElementById('98adee79-0d94-4021-900c-4bee30682191');
+var gd = document.getElementById('18ef4914-f305-48dc-aeec-f4eb43eb17e4');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+<section id="visualization" class="level2">
+<h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
+<div id="d57900c5" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="bf68bd74-9a74-46be-bf76-dd2a794b2ca5" class="plotly-graph-div" style="height:450px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("bf68bd74-9a74-46be-bf76-dd2a794b2ca5")) {                    Plotly.newPlot(                        "bf68bd74-9a74-46be-bf76-dd2a794b2ca5",                        [{"line":{"color":"#4e79a7","width":3},"mode":"lines","name":"f(x)","x":{"dtype":"f8","bdata":"AAAAAAAA8D+bgWoGqhnwPzUD1QxUM\u002fA\u002f0IQ\u002fE\u002f5M8D9qBqoZqGbwPwWIFCBSgPA\u002foAl\u002fJvyZ8D86i+ksprPwP9UMVDNQzfA\u002fcI6+Ofrm8D8KEClApADxP6WRk0ZOGvE\u002fQBP+TPgz8T\u002falGhTok3xP3UW01lMZ\u002fE\u002fD5g9YPaA8T+qGahmoJrxP0WbEm1KtPE\u002f3xx9c\u002fTN8T96nud5nufxPxQgUoBIAfI\u002fr6G8hvIa8j9KIyeNnDTyP+SkkZNGTvI\u002ffyb8mfBn8j8aqGagmoHyP7Qp0aZEm\u002fI\u002fT6s7re608j\u002fqLKazmM7yP4SuELpC6PI\u002fHzB7wOwB8z+5seXGlhvzP1QzUM1ANfM\u002f77S60+pO8z+JNiXalGjzPyS4j+A+gvM\u002fvjn65uib8z9Zu2TtkrXzP\u002fQ8z\u002fM8z\u002fM\u002fjr45+ubo8z8pQKQAkQL0P8TBDgc7HPQ\u002fXkN5DeU19D\u002f5xOMTj0\u002f0P5RGTho5afQ\u002fLsi4IOOC9D\u002fJSSMnjZz0P2TLjS03tvQ\u002f\u002fkz4M+HP9D+YzmI6i+n0PzNQzUA1A\u002fU\u002fztE3R98c9T9oU6JNiTb1PwPVDFQzUPU\u002fnlZ3Wt1p9T842OFgh4P1P9NZTGcxnfU\u002fbtu2bdu29T8IXSF0hdD1P6Pei3ov6vU\u002fPmD2gNkD9j\u002fY4WCHgx32P3Njy40tN\u002fY\u002fDuU1lNdQ9j+oZqCagWr2P0LoCqErhPY\u002f3Wl1p9Wd9j9469+tf7f2PxJtSrQp0fY\u002fre60utPq9j9IcB\u002fBfQT3P+LxiccnHvc\u002ffXP0zdE39z8Y9V7Ue1H3P7J2ydola\u002fc\u002fTfgz4c+E9z\u002foeZ7neZ73P4L7CO4juPc\u002fHX1z9M3R9z+4\u002ft36d+v3P1KASAEiBfg\u002f7AGzB8we+D+Hgx0Odjj4PyIFiBQgUvg\u002fvIbyGspr+D9XCF0hdIX4P\u002fKJxycen\u002fg\u002fjAsyLsi4+D8njZw0ctL4P8IOBzsc7Pg\u002fXJBxQcYF+T\u002f3EdxHcB\u002f5P5KTRk4aOfk\u002fLBWxVMRS+T\u002fHlhtbbmz5P2IYhmEYhvk\u002f\u002fJnwZ8Kf+T+WG1tubLn5PzGdxXQW0\u002fk\u002fzB4we8Ds+T9moJqBagb6PwEiBYgUIPo\u002fnKNvjr45+j82JdqUaFP6P9GmRJsSbfo\u002fbCivobyG+j8GqhmoZqD6P6ErhK4Quvo\u002fPK3utLrT+j\u002fWLlm7ZO36P3Gww8EOB\u002fs\u002fDDIuyLgg+z+ms5jOYjr7P0A1A9UMVPs\u002f27Zt27Zt+z92ONjhYIf7PxC6QugKofs\u002fqzut7rS6+z9GvRf1XtT7P+A+gvsI7vs\u002fe8DsAbMH\u002fD8WQlcIXSH8P7DDwQ4HO\u002fw\u002fS0UsFbFU\u002fD\u002fmxpYbW278P4BIASIFiPw\u002fG8prKK+h\u002fD+2S9YuWbv8P1DNQDUD1fw\u002f6k6rO63u\u002fD+F0BVCVwj9PyBSgEgBIv0\u002futPqTqs7\u002fT9VVVVVVVX9P\u002fDWv1v\u002fbv0\u002filgqYqmI\u002fT8l2pRoU6L9P8Bb\u002f279u\u002f0\u002fWt1pdafV\u002fT\u002f1XtR7Ue\u002f9P5DgPoL7CP4\u002fKmKpiKUi\u002fj\u002fF4xOPTzz+P2BlfpX5Vf4\u002f+ubom6Nv\u002fj+UaFOiTYn+Py\u002fqvaj3ov4\u002fymsor6G8\u002fj9k7ZK1S9b+P\u002f9u\u002fbv17\u002f4\u002fmvBnwp8J\u002fz80ctLISSP\u002fP8\u002fzPM\u002fzPP8\u002fanWn1Z1W\u002fz8E9xHcR3D\u002fP594fOLxif8\u002fOvrm6Juj\u002fz\u002fUe1HvRb3\u002fP2\u002f9u\u002fXv1v8\u002fCn8m\u002fJnw\u002fz9SgEgBIgUAQCDBfQT3EQBA7AGzB8weAEC6QugKoSsAQIeDHQ52OABAVMRSEUtFAEAiBYgUIFIAQO9FvRf1XgBAvIbyGsprAECKxycen3gAQFcIXSF0hQBAJEmSJEmSAEDyiccnHp8AQL\u002fK\u002fCrzqwBAjAsyLsi4AEBaTGcxncUAQCeNnDRy0gBA9M3RN0ffAEDCDgc7HOwAQI9PPD7x+ABAXJBxQcYFAUAq0aZEmxIBQPcR3EdwHwFAxFIRS0UsAUCSk0ZOGjkBQF\u002fUe1HvRQFALBWxVMRSAUD6VeZXmV8BQMeWG1tubAFAlNdQXkN5AUBiGIZhGIYBQC5Zu2TtkgFA\u002fJnwZ8KfAUDK2iVrl6wBQJYbW25suQFAZFyQcUHGAUAxncV0FtMBQP7d+nfr3wFAzB4we8DsAUCZX2V+lfkBQGagmoFqBgJANOHPhD8TAkABIgWIFCACQM5iOovpLAJAnKNvjr45AkBp5KSRk0YCQDYl2pRoUwJABGYPmD1gAkDRpkSbEm0CQJ7neZ7neQJAbCivobyGAkA5aeSkkZMCQAaqGahmoAJA1OpOqzutAkChK4SuELoCQG5subHlxgJAPK3utLrTAkAJ7iO4j+ACQNYuWbtk7QJApG+Ovjn6AkBxsMPBDgcDQD7x+MTjEwNADDIuyLggA0DYcmPLjS0DQKazmM5iOgNAdPTN0TdHA0BANQPVDFQDQA52ONjhYANA27Zt27ZtA0Co96Lei3oDQHY42OFghwNAQ3kN5TWUA0AQukLoCqEDQN76d+vfrQNAqzut7rS6A0B4fOLxiccDQEa9F\u002fVe1ANAE\u002f5M+DPhA0DgPoL7CO4DQK5\u002ft\u002f7d+gNAe8DsAbMHBEBIASIFiBQEQBZCVwhdIQRA44KMCzIuBECww8EOBzsEQH4E9xHcRwRAS0UsFbFUBEAYhmEYhmEEQObGlhtbbgRAswfMHjB7BECASAEiBYgEQE6JNiXalARAG8prKK+hBEDoCqErhK4EQLZL1i5ZuwRAgowLMi7IBEBQzUA1A9UEQB4OdjjY4QRA6k6rO63uBEC4j+A+gvsEQIXQFUJXCAVAUhFLRSwVBUAgUoBIASIFQO2StUvWLgVAutPqTqs7BUCIFCBSgEgFQFVVVVVVVQVAIpaKWCpiBUDw1r9b\u002f24FQL0X9V7UewVAilgqYqmIBUBYmV9lfpUFQCXalGhTogVA8hrKayivBUDAW\u002f9u\u002fbsFQI2cNHLSyAVAWt1pdafVBUAoHp94fOIFQPVe1HtR7wVAwp8Jfyb8BUCQ4D6C+wgGQF0hdIXQFQZAKmKpiKUiBkD4ot6Lei8GQMXjE49PPAZAkiRJkiRJBkBgZX6V+VUGQCyms5jOYgZA+ubom6NvBkDIJx6feHwGQJRoU6JNiQZAYqmIpSKWBkAv6r2o96IGQPwq86vMrwZAymsor6G8BkCXrF2ydskGQGTtkrVL1gZAMi7IuCDjBkD\u002fbv279e8GQMyvMr\u002fK\u002fAZAmvBnwp8JB0BnMZ3FdBYHQDRy0shJIwdAArMHzB4wB0DP8zzP8zwHQJw0ctLISQdAanWn1Z1WB0A3ttzYcmMHQAT3EdxHcAdA0jdH3xx9B0CfeHzi8YkHQGy5seXGlgdAOvrm6JujB0AHOxzscLAHQNR7Ue9FvQdAoryG8hrKB0Bv\u002fbv179YHQDw+8fjE4wdACn8m\u002fJnwB0DWv1v\u002fbv0HQKQAkQJECghAcUHGBRkXCEA\u002fgvsI7iMIQAzDMAzDMAhA2QNmD5g9CECnRJsSbUoIQHSF0BVCVwhAQcYFGRdkCEAOBzsc7HAIQNxHcB\u002fBfQhAqYilIpaKCEB2ydola5cIQEQKEClApAhAEUtFLBWxCEDei3ov6r0IQKzMrzK\u002fyghAeQ3lNZTXCEBGTho5aeQIQBSPTzw+8QhA4c+EPxP+CECuELpC6AoJQHxR70W9FwlASZIkSZIkCUAW01lMZzEJQOQTj088PglAsVTEUhFLCUB+lflV5lcJQEvWLlm7ZAlAGRdkXJBxCUDmV5lfZX4JQLOYzmI6iwlAgdkDZg+YCUBOGjlp5KQJQBtbbmy5sQlA6Zujb46+CUC23NhyY8sJQIMdDnY42AlAUV5DeQ3lCUAen3h84vEJQOvfrX+3\u002fglAuCDjgowLCkCGYRiGYRgKQFOiTYk2JQpAIOOCjAsyCkDuI7iP4D4KQLtk7ZK1SwpAiKUilopYCkBW5leZX2UKQCMnjZw0cgpA8GfCnwl\u002fCkC+qPei3osKQIvpLKazmApAWCpiqYilCkAma5esXbIKQPOrzK8yvwpAwOwBswfMCkCOLTe23NgKQFtubLmx5QpAKK+hvIbyCkD179a\u002fW\u002f8KQMMwDMMwDAtAkHFBxgUZC0BdsnbJ2iULQCvzq8yvMgtA+DPhz4Q\u002fC0DFdBbTWUwLQJO1S9YuWQtAYPaA2QNmC0AtN7bc2HILQPt369+tfwtAyLgg44KMC0CV+VXmV5kLQGI6i+kspgtAMHvA7AGzC0D9u\u002fXv1r8LQMr8KvOrzAtAmD1g9oDZC0BlfpX5VeYLQDK\u002fyvwq8wtAAAAAAAAADEA="},"y":{"dtype":"f8","bdata":"AAAAAAAAJEBN153SHiAkQDEZbTpSQCRArsVtN5pgJEDA3J\u002fJ9oAkQGteA\u002fFnoSRArkqYre3BJECGoV7\u002fh+IkQPhiVuY2AyVAAI9\u002fYvojJUCgJdpz0kQlQNgmZhq\u002fZSVAppIjVsCGJUAMaRIn1qclQAqqMo0AySVAnlWEiD\u002fqJUDKawcZkwsmQI\u002fsuz77LCZA6deh+XdOJkDcLblJCXAmQGXuAS+vkSZAhxl8qWmzJkBArye5ONUmQJCvBF4c9yZAeBoTmBQZJ0D471JnITsnQA4wxMtCXSdAvNpmxXh\u002fJ0AC8DpUw6EnQN5vQHgixCdAUlp3MZbmJ0Ber99\u002fHgkoQAFveWO7KyhAPJlE3GxOKEANLkHqMnEoQHctb40NlChAd5fOxfy2KEAQbF+TANooQECrIfYY\u002fShABlUV7kUgKUBlaTp7h0MpQFvokJ3dZilA6NEYVUiKKUANJtKhx60pQMnkvINb0SlAHA7Z+gP1KUAIoiYHwRgqQIqgpaiSPCpAowlW33hgKkBU3Terc4QqQJ0bSwyDqCpAfsSPAqfMKkD01wWO3\u002fAqQANWra4sFStAqj6GZI45K0DnkZCvBF4rQL1PzI+PgitAKng5BS+nK0AtC9gP48srQMkIqK+r8CtA\u002fHCp5IgVLEDGQ9yuejosQCiBQA6BXyxAIinWApyELECyO52My6ksQNm4lasPzyxAmaC\u002fX2j0LEDw8hqp1RktQN6vp4dXPy1AZNdl++1kLUCCaVUEmYotQDZmdqJYsC1Ags3I1SzWLUBmn0yeFfwtQODbAfwSIi5A8oLo7iRILkCclAB3S24uQN0QSpSGlC5AtvfERta6LkAmSXGOOuEuQCwFT2uzBy9Ayite3UAuL0AAvZ7k4lQvQNC4EIGZey9AMx+0smSiL0Aw8Ih5RMkvQMQrj9U48C9A92hj46ALMEBZ8ZemLx8wQAYvZbTIMjBA\u002fiHLDGxGMEBDysmvGVowQNQnYZ3RbTBArzqR1ZOBMEDXAlpYYJUwQEuAuyU3qTBACbO1PRi9MEATm0igA9EwQGo4dE355DBADYs4Rfn4MED6kpWHAw0xQDRQixQYITFAusIZ7DY1MUCK6kAOYEkxQKfHAHuTXTFAEFpZMtFxMUDDoUo0GYYxQMSe1IBrmjFAEFH3F8iuMUCmuLL5LsMxQIrVBiag1zFAuKfznBvsMUAyL3leoQAyQPhrl2oxFTJACl5OwcspMkBoBZ5icD4yQBFihk4fUzJABnQHhdhnMkBHOyEGnHwyQNO309FpkTJAq+ke6EGmMkDP0AJJJLsyQD5tf\u002fQQ0DJA+r6U6gflMkABxkIrCfoyQFOCibYUDzNA8vNojCokM0DcGuGsSjkzQBL38Rd1TjNAk4ibzaljM0Bgz93N6HgzQHnLuBgyjjNA3nwsroWjM0CO4ziO47gzQIr\u002f3bhLzjNA0tAbLr7jM0BmV\u002fLtOvkzQEWTYfjBDjRAcIRpTVMkNEDmKgrt7jk0QKmGQ9eUTzRAtpcVDEVlNEAQXoCL\u002f3o0QLbZg1XEkDRApwogapOmNEDj8FTJbLw0QGyMInNQ0jRAQd2IZz7oNEBg44emNv40QMyeHzA5FDVAhA9QBEYqNUCGNRkjXUA1QNUQe4x+VjVAcKF1QKpsNUBW5wg\u002f4II1QIjiNIggmTVABpP5G2uvNUDP+Fb6v8U1QOQTTSMf3DVARuTblojyNUDyaQNV\u002fAg2QOukw116HzZALZUcsQI2NkC+Og5PlUw2QJiVmDcyYzZAv6W7atl5NkAza3foipA2QPDly7BGpzZA+hW5wwy+NkBS+z4h3dQ2QPKVXcm36zZA4OUUvJwCN0Aa62T5ixk3QJ6lTYGFMDdAbhXPU4lHN0CMOulwl143QPIUnNivdTdApqTnitKMN0Cm6cuH\u002f6M3QPDjSM82uzdAh5NeYXjSN0Br+Aw+xOk3QJgSVGUaAThAEuIz13oYOEDYZqyT5S84QOmgvZpaRzhARpBn7NleOEDwNKqIY3Y4QOSOhW\u002f3jThAI575oJWlOECwYgYdPr04QIbcq+Pw1DhAqgvq9K3sOEAa8MBQdQQ5QNKJMPdGHDlA2tg46CI0OUAs3dkjCUw5QMmWE6r5YzlAtAXmevR7OUDoKVGW+ZM5QGgDVfwIrDlANpLxrCLEOUBO1iaoRtw5QLLP9O109DlAY35bfq0MOkBe4lpZ8CQ6QKT78n49PTpAOcoj75RVOkAXTu2p9m06QECHT69ihjpAuHVK\u002f9ieOkB6Gd6ZWbc6QIZyCn\u002fkzzpA4IDPrnnoOkCFRC0pGQE7QHW9I+7CGTtAsuuy\u002fXYyO0A6z9pXNUs7QA5om\u002fz9YztALrb069B8O0CZueYlrpU7QE9ycaqVrjtAU+CUeYfHO0CeA1GTg+A7QDrcpfeJ+TtAIWqTppoSPEBQrRmgtSs8QM6lOOTaRDxAllPwcgpePECqtkBMRHc8QAzPKXCIkDxAuJyr3tapPECuH8aXL8M8QPRXeZuS3DxAgkXF6f\u002f1PEBc6KmCdw89QIRAJ2b5KD1A9k09lIVCPUCzEOwMHFw9QL6IM9C8dT1AErYT3mePPUC0mIw2Hak9QKIwntncwj1A2n1Ix6bcPUBdgIv\u002fevY9QC44Z4JZED5ASqXbT0IqPkCwx+hnNUQ+QGWfjsoyXj5AYizNdzp4PkCtbqRvTJI+QERmFLJorD5AJhMdP4\u002fGPkBSdb4WwOA+QM6M+Dj7+j5AkFnLpUAVP0Ci2zZdkC8\u002fQAATO1\u002fqST9Apv\u002fXq05kP0CaoQ1DvX4\u002fQNr42yQ2mT9AZAVDUbmzP0A9x0LIRs4\u002fQF8+24ne6D9AZjUGS8ABQEBEJmt2Fg9AQMdxHMdxHEBA8BcaPdIpQEC+GGTYNzdAQDN0+piiREBATSrdfhJSQEAOOwyKh19AQHSmh7oBbUBAf2xPEIF6QEAyjWOLBYhAQIkIxCuPlUBAht5w8R2jQEAqD2rcsbBAQHOar+xKvkBAYoBBIunLQED4wB99jNlAQDJcSv0050BAElLBouL0QECZooRtlQJBQMZNlF1NEEFAmFPwcgoeQUAQtJitzCtBQCxvjQ2UOUFA8YTOkmBHQUBb9Vs9MlVBQGrANQ0JY0FAIOZbAuVwQUB6Zs4cxn5BQHtBjVysjEFAI3eYwZeaQUBvB\u002fBLiKhBQGLyk\u002ft9tkFA+zeE0HjEQUA42MDKeNJBQBzTSep94EFAqCgfL4juQUDW2ECZl\u002fxBQKzjriisCkJAKElp3cUYQkBKCXC35CZCQBAkw7YINUJAfpli2zFDQkCRaU4lYFFCQEqUhpSTX0JAqhkLKcxtQkCt+dviCXxCQFg0+cFMikJAqMlixpSYQkCeuRjw4aZCQDoEGz80tUJAfKlps4vDQkBkqQRN6NFCQPED7AtK4EJAJrkf8LDuQkD9yJ\u002f5HP1CQH0zbCiOC0NAoviEfAQaQ0BtGOr1fyhDQN6Sm5QAN0NA9GeZWIZFQ0Cxl+NBEVRDQBMielChYkNAGgddhDZxQ0DIRozd0H9DQB3hB1xwjkNAFtbP\u002fxSdQ0C1JeTIvqtDQPzPRLdtukNA5tTxyiHJQ0B3NOsD29dDQK\u002fuMGKZ5kNAjAPD5Vz1Q0AOc6GOJQREQDc9zFzzEkRABWJDUMYhREB44QZpnjBEQJS7Fqd7P0RAVPByCl5OREC4fxuTRV1EQMZpEEEybERAdq5RFCR7REDNTd8MG4pEQMpHuSoXmURAbpzfbRioREC2S1LWHrdEQKVVEWQqxkRAO7ocFzvVREB0eXTvUOREQFSTGO1r80RA3AcJEIwCRUAI10VYsRFFQNkAz8XbIEVAUoWkWAswRUBvZMYQQD9FQDKeNO55TkVAmzLv8LhdRUCrIfYY\u002fWxFQGBrSWZGfEVAug\u002fp2JSLRUC8DtVw6JpFQGJoDS5BqkVArhySEJ+5RUChK2MYAslFQDmVgEVq2EVAd1nql9fnRUBceKAPSvdFQOXxoqzBBkZAFMbxbj4WRkDq9IxWwCVGQGZ+dGNHNUZAhmKoldNERkBOoSjtZFRGQLo69Wn7Y0ZAzS4ODJdzRkCGfXPTN4NGQOQmJcDdkkZA6Coj0oiiRkCSiW0JObJGQONCBGbuwUZA2Fbn56jRRkB0xRaPaOFGQLaOklst8UZAnrJaTfcAR0AqMW9kxhBHQF4K0KCaIEdANz59AnQwR0C2zHaJUkBHQNq1vDU2UEdApvlOBx9gR0AWmC3+DHBHQCyRWBoAgEdA6OTPW\u002fiPR0BKk5PC9Z9HQFKco074r0dAAAAAAADAR0A="},"type":"scatter"},{"marker":{"color":"#f0a500","line":{"width":2},"size":8,"symbol":"line-ns-open"},"mode":"markers","name":"Midpoints sn","x":{"dtype":"f8","bdata":"AAAAAAAAAkAAAAAAAAAFQAAAAAAAgAZAAAAAAABAB0AAAAAAAKAHQH0h5Lz\u002fzwdAvxBy3v\u002fnB0Di5lQyAPQHQO6UDtb\u002f+QdAd0oH6\u002f\u002f8B0C+g584gP4HQN\u002fBTxxA\u002fwdA8OAnDqD\u002fB0D1EfjDz\u002f8HQPoI\u002fOHn\u002fwdAfQT+8PP\u002fB0DB4Jo7+v8HQN6Rsdr8\u002fwdA78hYbf7\u002fB0D6Qsh5\u002f\u002f8HQPpCyHn\u002f\u002fwdA"},"y":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"type":"scatter"},{"marker":{"color":"#2ecc71","size":12,"symbol":"star"},"mode":"markers","name":"Exact root \u03b1 = -0.3819660112501051","x":[-0.3819660112501051],"y":[0],"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"shapes":[{"line":{"color":"gray","dash":"dash"},"opacity":0.5,"type":"line","x0":0,"x1":1,"xref":"x domain","y0":0,"y1":0,"yref":"y"}],"legend":{"orientation":"h","y":-0.2},"font":{"color":"#ffffff"},"title":{"text":"Bisection Method \u2014 f(x) = 2.0x\u00b2 + 6.0x + 2.0"},"xaxis":{"title":{"text":"x"}},"yaxis":{"title":{"text":"f(x)"}},"height":450,"plot_bgcolor":"rgba(0,0,0,0)","paper_bgcolor":"rgba(0,0,0,0)"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('bf68bd74-9a74-46be-bf76-dd2a794b2ca5');
 var x = new MutationObserver(function (mutations, observer) {{
         var display = window.getComputedStyle(gd).display;
         if (!display || display === 'none') {{
@@ -810,7 +713,7 @@ if (outputEl) {{
 </section>
 <section id="conclusions" class="level2">
 <h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
-<p>The iterative search method relies entirely on the fact that <span class="math inline">\(Δ𝑥\)</span> is small enough to capture the “frequency” of the function. This means that, if we aren’t careful, we might find roots, but the calculations would take forever if the root were actually far from zero.</p>
+<p>The bisection method guarantees convergence as long as <span class="math inline">\(f\)</span> is continuous and <span class="math inline">\(f(a) \cdot f(b) &lt; 0\)</span>. Its linear convergence (<span class="math inline">\(\tau = 1\)</span>, <span class="math inline">\(\lambda = 0.5\)</span>) means the error is halved at every step, which is reliable but slower than methods like Newton-Raphson. The error convergence plot confirms that the actual error stays below the theoretical bound <span class="math inline">\(\frac{b-a}{2^n}\)</span> at every iteration.</p>
 
 
 </section>

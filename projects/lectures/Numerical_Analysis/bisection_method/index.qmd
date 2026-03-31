@@ -3,7 +3,7 @@ title: "Lecture 1.2 Root Finding Methods: Bisection Method"
 description: "Bisection Method"
 date: 2025-03-30
 categories: [numerical-analysis, python]
-image: bolzanos_theorem.png
+image: bisection_method_ilustration.png
 ---
 
 ## Overview
@@ -50,7 +50,7 @@ $$
 n > \frac{\ln(b - a) - \ln(\epsilon)}{\ln(2)}
 $$
 
-**Proof by construction**
+**Time to prove**
 
 Let be $[a_1, b_1]$ the initial interval, its length $L = b_1 - a_1 = b - a$, the inicial mid point is $a_1$
 
@@ -64,33 +64,87 @@ $n=2$, $L= \frac{1}{2} (\frac{b-a}{2})= \frac{b-a}{2^2}$
 
 $n=2$, $[a_n, b_n]= \frac{b-a}{2^{n-1}}$
 
-Notice that the exponent is $n-1$ because in $n = 1$, the length has reduced once respect to the original or $2^n$ if the consider the absolute error from the start. 
+Notice that the exponent is $n-1$ because in $n = 1$, the length has been reduced once respect to the original or $2^n$ if the consider the absolute error from the start. 
 
-## The algorithm
+Now, we know that $\alpha \in [a_n, b_n]$, the aproximation $s_n$ is the mid point of the interval: 
 
-Let be i the iteration, if a sequence of points is defined as follows:
+$$
+s_n = \frac{a_n-b_n}{2}
+$$
 
-$$x_{i+1} = x_i + \Delta x $$
+Geometrically, the maximun distance from $s_n$ to any extreme point is the half of the current interval.
 
-We can evaluate the crossing condition at each step:
+$$
+\therefore |s_n - \alpha| \leq \frac{1}{2}(b_n - a_n) = \frac{1}{2}\frac{b - a}{2^{n-1}} = \frac{b - a}{2^n}
+$$
 
-$$f(x_i) \cdot f(x_{i+1}) < 0$$
+Rember we said that 
+$$
+|s_n - \alpha| \leq \epsilon
+$$
 
-If this is true, the root is in the interval:
+$$
+\implies \frac{2^n}{b-a}>\frac{1}{\epsilon}
+$$
 
-$$(x_i, x_{i+1})$$
+$$
+\implies 2^n>\frac{b-a}{\epsilon}
+$$
 
-If not, $f>0$, we continue "walking" $\Delta x$
+$$
+\implies \ln(2^n)>\ln(\frac{b-a}{\epsilon})
+$$
+
+$$
+\implies n>\frac{\ln(\frac{b-a}{\epsilon})}{\ln(2)}
+$$
+
+or also:
+
+$$
+n> \log_2 \frac{b-a}{\epsilon}
+$$
 
 ## Convergence Order
 
-In Incremental Search, we do not obtain the exact value of the root, but rather a confidence interval. If we find a sign change between $x_i$ and $x_{i+1}$, the maximum possible error (the maximum distance to the real root) is the step size:
+The convergence order determines the rate at which a sequence of approximations converges to the true solution.
 
-$$E_{max} \approx \Delta x$$
+Let be the real error $E_n = | s_n - \alpha |$, a sequence converges to $\alpha$ with a convergence order $\tau$ and a asintotic error constant called $\lambda$ ($\lambda>0$) if it satifies the following limit:
+
+$$
+\lim_{n \to \infty} \frac{|s_{n+1} - \alpha|}{|s_n - \alpha|^\tau} = \lim_{n \to \infty} \frac{E_{n+1}}{(E_n)^\tau} = \lambda
+$$
+
+In the worsth case:
+$$
+|e_{n+1}| \approx \frac{1}{2} |e_n|
+$$
+
+$$
+\implies \tau = 1 \text{ and } \lambda = 0.5
+$$
+
+Due to the fact $\tau = 1$, we say that the algorithm converges linearly.
+
+## The algorithm
+
+The logic can be summarized in the following steps:
+
+For $n = 1, 2, 3, \dots$:
+
+The mid point in the $n$ iteration is defined as $s_n = \frac{a_n + b_n}{2}$.1
+
+* Evaluate $f(s_n)$.
+
+* If $f(s_n) = 0$ or $\frac{b_n - a_n}{2} < \epsilon$, stop the algorithm; $s_n$ is the root.
+
+* If $f(a_n) \cdot f(s_n) < 0$, root is in the left half. Hence $a_{n+1} = a_n$ and $b_{n+1} = s_n$.
+
+* If not , the root is in the rigth half. Hence $a_{n+1} = s_n$ and $b_{n+1} = b_n$.
 
 ## Hands on
 
-This code is made for applying the searching algorithm to find the roots in quadratic equations, the idea is to show the diference between the analytic solution and the aproximation interval. It is important to mention that this is a modified version. Not only do it works for positive intervals but also for negative ones.
+Here, you will see two important concepts, **Theorical bound** and the **Real error**, this code is designed to show you this difference. 
 
 ```{python}
 #| echo: true
@@ -98,153 +152,98 @@ This code is made for applying the searching algorithm to find the roots in quad
 #| code-summary: "See implementation"
 
 import pandas as pd
+import numpy as np
 
-# Parameters
-a = 1.0
-b = -3.0
-c = 2.0
-deltax = 0.1
+# ─── Quadratic parameters ──────────────────────────
+A, B, C = 2.0, 6.0, 2.0   # f(x) = x² - 3x + 2
+f = lambda x: A*x**2 + B*x + C
 
-def searching(roots, step):
-  intervalos = []
-  historial = []
-  x = 0.0
-  iterations = 0
-  flag = 0
-  while flag != roots:
-    cuadraticfuncion = lambda a1, b1, c1, x1 : a1*pow(x1, 2) + b1*x1 + c1
-    cuadraticfuncionn = lambda a1, b1, c1, x1 : a1*pow(-x1, 2) + b1*(-x1) + c1
-    fi_p = cuadraticfuncion(a, b, c, x)
-    fi_n = cuadraticfuncionn(a, b, c, x)
-    x = x + step
-    fi_1_p = cuadraticfuncion(a, b, c, x)
-    fi_1_n = cuadraticfuncionn(a, b, c, x)
-    if bool(fi_p<0):
-      f1 = -1
-    else:
-      f1 = 1
-    if bool(fi_1_p<0):
-      f2 = -1
-    else:
-      f2 = 1
-    if bool(fi_n<0):
-      f3 = -1
-    else:
-      f3 = 1
-    if bool(fi_1_n<0):
-      f4 = -1
-    else:
-      f4 = 1
-    if f1*f2 < 0:
-      flag += 1
-      xi_1p = x
-      xip = x - step
-      intervalos.append([xip, xi_1p])
-      historial.append({"Iterations": iterations, "xi": round(xip,4), "xi+1": round(xi_1p,4), "f(xi)": round(fi_p,4), "f(xi+1)": round(fi_1_p,4), "Raíz": "Found in Positive side"})
-    else:
-      xi_1p = x
-      xip = x - step
-      historial.append({"Iterations": iterations, "xi": round(xip,4), "xi+1": round(xi_1p,4), "f(xi)": round(fi_p,4), "f(xi+1)": round(fi_1_p,4), "Raíz": "Not Found"})
-    if f3*f4 < 0:
-      flag += 1
-      xi_1n = -1 * x
-      xin = xi_1n + step
-      intervalos.append([xin, xi_1n])
-      historial.append({"Iterations": iterations, "xi": round(xin,4), "xi+1": round(xi_1n,4), "f(xi)": round(fi_n,4), "f(xi+1)": round(fi_1_n,4), "Raíz": "Found in Negative side"})
-    else:
-      xi_1n = -1 * x
-      xin = xi_1n + step
-      historial.append({"Iterations": iterations, "xi": round(xin,4), "xi+1": round(xi_1n,4), "f(xi)": round(fi_n,4), "f(xi+1)": round(fi_1_n,4), "Raíz": "Not found"})
-    
-    iterations += 1
+# ─── Analytical solution ───────────────────────────
+discriminant = B**2 - 4*A*C
+root1 = (-B + np.sqrt(discriminant)) / (2*A)
+root2 = (-B - np.sqrt(discriminant)) / (2*A)
+print(f"f(x) = {A}x² - {B}x + {C}")
+print(f"Analytical roots: x₁ = {root1}, x₂ = {root2}")
 
-  print("¡Great! We have found all roots!")
-  print("Intervalos:", intervalos)
-  return historial
+# ─── Bisection setup ───────────────────────────────
+a, b = 1.5, 3.0    # interval containing root1
+alpha = root1       # exact root for error comparison
+epsilon = 1e-6
 
-# Ejecución
-print(f"f(x) = {a}x² + {b}x + {c}")
-discriminant = pow(b,2) - (4*a*c)
-print(f"Discriminant: {discriminant}")
+def bisection(f, a, b, epsilon, alpha):
+    historial = []
+    n = 1
+    n_min = np.ceil((np.log(b - a) - np.log(epsilon)) / np.log(2))
+    print(f"Minimum iterations required: {int(n_min)}")
 
-if discriminant < 0:
-    print("There aren't real roots")
-elif discriminant == 0:
-    historial = searching(1, deltax)
-else:
-    historial = searching(2, deltax)
+    while True:
+        sn = (a + b) / 2
+        fsn = f(sn)
+        en_bound = (b - a) / 2              # theoretical bound
+        en_real  = abs(sn - alpha)          # real error
+
+        historial.append({
+            "n": n,
+            "a": round(a, 6),
+            "b": round(b, 6),
+            "sn": round(sn, 6),
+            "f(sn)": round(fsn, 6),
+            "Theoretical bound": round(en_bound, 8),
+            "Real error": round(en_real, 8),
+        })
+
+        if fsn == 0 or en_bound < epsilon:
+            print(f"Root found: sn = {sn:.8f} after {n} iterations")
+            break
+
+        if f(a) * fsn < 0:
+            b = sn
+        else:
+            a = sn
+
+        n += 1
+
+    return sn, pd.DataFrame(historial)
+
+root, df = bisection(f, a, b, epsilon, alpha)
 ```
 
 ## Iterations
 ```{python}
 #| echo: false
-pd.DataFrame(historial)
+df
 ```
 
-## Visualization
+## Error Convergence
 ```{python}
 #| echo: false
 
 import plotly.graph_objects as go
-import numpy as np
-
-df = pd.DataFrame(historial)
-
-x_min = min(df["xi"].min(), -1) - 1
-x_max = max(df["xi+1"].max(), 4) + 1
-x_plot = np.linspace(x_min, x_max, 400)
-y_plot = a * x_plot**2 + b * x_plot + c
 
 fig = go.Figure()
 
-# Function curve
 fig.add_trace(go.Scatter(
-    x=x_plot, y=y_plot,
-    mode="lines",
-    name="f(x)",
-    line=dict(color="#4e79a7", width=3)
+    x=df["n"], y=df["Theoretical bound"],
+    mode="lines+markers",
+    name="Theoretical bound (b-a)/2ⁿ",
+    line=dict(color="#4e79a7", width=2, dash="dash"),
+    marker=dict(size=6)
 ))
 
-# y=0 line
-fig.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5)
-
-# Intervals where root was found
-raices = df[df["Root"].str.contains("✅")] if "Root" in df.columns else df[df["Raíz"].str.contains("✅")]
-col_raiz = "Root" if "Root" in df.columns else "Raíz"
-raices = df[df[col_raiz].str.contains("✅")]
-
-for _, row in raices.iterrows():
-    fig.add_vrect(
-        x0=row["xi"], x1=row["xi+1"],
-        fillcolor="rgba(80, 200, 120, 0.25)",
-        line=dict(color="rgba(80,200,120,0.6)", width=1),
-        annotation_text=f"Root ~{round((row['xi']+row['xi+1'])/2, 2)}",
-        annotation_position="top left"
-    )
-
-# Evaluated points
 fig.add_trace(go.Scatter(
-    x=df["xi"], y=df["f(xi)"],
-    mode="markers",
-    name="Evaluated points",
-    marker=dict(
-        color=df[col_raiz].apply(lambda r: "#2ecc71" if "✅" in r else "#e74c3c"),
-        size=8,
-        symbol="circle"
-    ),
-    hovertemplate="xi: %{x}<br>f(xi): %{y}<extra></extra>"
+    x=df["n"], y=df["Real error"],
+    mode="lines+markers",
+    name="Real error |sn - α|",
+    line=dict(color="#3cdce7", width=2),
+    marker=dict(size=6)
 ))
-
-y_min = min(df["f(xi)"].min(), y_plot.min()) - 1
-y_max = max(df["f(xi)"].max(), y_plot.max()) + 1
 
 fig.update_layout(
-    title="Searching Method — f(x) = ax² + bx + c",
-    xaxis_title="x",
-    yaxis_title="f(x)",
-    yaxis=dict(range=[max(y_min, -10), min(y_max, 10)]),
-    xaxis=dict(range=[x_min, x_max]),
-    height=500,
+    title=f"Error Convergence — Bisection Method (α = {alpha})",
+    xaxis_title="Iteration n",
+    yaxis_title="Error",
+    yaxis_type="log",
+    height=450,
     legend=dict(orientation="h", y=-0.2),
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
@@ -254,7 +253,59 @@ fig.update_layout(
 fig.show()
 ```
 
+## Visualization
+```{python}
+#| echo: false
+
+x_plot = np.linspace(a - 0.5, b + 0.5, 400)
+y_plot = f(x_plot)
+
+fig2 = go.Figure()
+
+# Function curve
+fig2.add_trace(go.Scatter(
+    x=x_plot, y=y_plot,
+    mode="lines",
+    name="f(x)",
+    line=dict(color="#4e79a7", width=3)
+))
+
+# y=0 line
+fig2.add_hline(y=0, line_dash="dash", line_color="gray", opacity=0.5)
+
+# Midpoints on x-axis
+fig2.add_trace(go.Scatter(
+    x=df["sn"], y=[0] * len(df),
+    mode="markers",
+    name="Midpoints sn",
+    marker=dict(color="#f0a500", size=8, symbol="line-ns-open", line=dict(width=2))
+))
+
+# Exact root
+fig2.add_trace(go.Scatter(
+    x=[alpha], y=[0],
+    mode="markers",
+    name=f"Exact root α = {alpha}",
+    marker=dict(color="#2ecc71", size=12, symbol="star")
+))
+
+fig2.update_layout(
+    title=f"Bisection Method — f(x) = {A}x² + {B}x + {C}",
+    xaxis_title="x",
+    yaxis_title="f(x)",
+    height=450,
+    legend=dict(orientation="h", y=-0.2),
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font=dict(color="#ffffff")
+)
+
+fig2.show()
+```
+
 ## Conclusions
 
-The iterative search method relies entirely on the fact that $Δ𝑥$ is small enough to capture the “frequency” of the function.
-This means that, if we aren't careful, we might find roots, but the calculations would take forever if the root were actually far from zero. 
+The bisection method guarantees convergence as long as $f$ is continuous and $f(a) \cdot f(b) < 0$.
+Its linear convergence ($\tau = 1$, $\lambda = 0.5$) means the error is halved at every step,
+which is reliable but slower than methods like Newton-Raphson.
+The error convergence plot confirms that the actual error stays below the theoretical bound $\frac{b-a}{2^n}$ at every iteration.
