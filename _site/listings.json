@@ -7,7 +7,9 @@
     "listing": "/projects/lectures/Numerical_Analysis/index.html",
     "items": [
       "/projects/lectures/Numerical_Analysis/bisection_method/index.html",
-      "/projects/lectures/Numerical_Analysis/searching_methods/index.html"
+      "/projects/lectures/Numerical_Analysis/searching_methods/index.html",
+      "/projects/lectures/Numerical_Analysis/lecture-0-intro/index.html",
+      "/projects/lectures/Numerical_Analysis/course-introduction/index.html"
     ]
   },
   {
@@ -19,6 +21,7 @@
   {
     "listing": "/projects/lectures/index.html",
     "items": [
+      "/projects/lectures/Deep_Learning/index.html",
       "/projects/lectures/Numerical_Analysis/index.html",
       "/projects/lectures/Quantum_Computing/index.html"
     ]

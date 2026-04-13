@@ -34,5 +34,23 @@
   },
   "projects/lectures/Numerical_Analysis/bisection_method/index.qmd": {
     "index.html": "89a31dc4"
+  },
+  "projects/machine-learning/gravitational-waves-cnn/index.qmd": {
+    "index.html": "0165c453"
+  },
+  "projects/lectures/Deep_Learning/cnn-fundamentals/index.qmd": {
+    "index.html": "cfd17b9b"
+  },
+  "projects/lectures/Deep_Learning/index.qmd": {
+    "index.html": "51e3d335"
+  },
+  "projects/lectures/Numerical_Analysis/introduction/index.qmd": {
+    "index.html": "f6af2318"
+  },
+  "projects/lectures/Numerical_Analysis/course-introduction/index.qmd": {
+    "index.html": "a2f8daf7"
+  },
+  "projects/lectures/Numerical_Analysis/lecture-0-intro/index.qmd": {
+    "index.html": "f1fe5274"
   }
 }

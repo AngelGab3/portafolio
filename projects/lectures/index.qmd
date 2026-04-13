@@ -6,6 +6,7 @@ listing:
   contents:
     - path: Numerical_Analysis/index.qmd
     - path: Quantum_Computing/index.qmd
+    - path: Deep_Learning/index.qmd
   type: grid
   image-height: 200px
 ---

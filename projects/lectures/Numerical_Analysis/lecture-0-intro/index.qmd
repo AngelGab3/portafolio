@@ -1,0 +1,241 @@
+---
+title: "Lecture 0: Floating Point Arithmetic"
+description: "How computers represent and operate on real numbers"
+date: 2025-01-10
+categories: [numerical-analysis, python]
+image: preview.png
+---
+
+## Overview
+
+Before writing a single numerical algorithm, we need to understand how
+computers store and manipulate numbers. The answer is **floating point
+arithmetic** — and it has surprising consequences for numerical computation.
+
+---
+
+## The Real Number Problem
+
+Computers have finite memory. The real number line is infinite and continuous.
+This fundamental mismatch means that most real numbers **cannot be represented
+exactly** in a computer.
+
+For example:
+
+$$\frac{1}{3} = 0.333333\ldots \quad \text{(infinite decimal)}$$
+
+$$\sqrt{2} = 1.41421356\ldots \quad \text{(irrational)}$$
+
+Both must be approximated with a finite number of bits.
+
+---
+
+## IEEE 754 Standard
+
+Modern computers use the **IEEE 754** standard for floating point representation.
+A 64-bit double precision number has the form:
+
+$$x = (-1)^s \cdot m \cdot 2^e$$
+
+Where:
+
+- $s \in \{0, 1\}$ — **sign** bit (1 bit)
+- $m \in [1, 2)$ — **mantissa** or significand (52 bits)
+- $e \in [-1022, 1023]$ — **exponent** (11 bits)
+
+The 64 bits are distributed as:
+```
+| 1 bit  | 11 bits  | 52 bits    |
+| sign   | exponent | mantissa   |
+```
+
+---
+
+## Machine Epsilon
+
+The **machine epsilon** $\epsilon_{mach}$ is the smallest number such that:
+
+$$1 + \epsilon_{mach} \neq 1$$
+
+For 64-bit doubles:
+
+$$\epsilon_{mach} = 2^{-52} \approx 2.22 \times 10^{-16}$$
+
+**Proof:**
+
+The mantissa has 52 bits, so the smallest representable difference between
+$1$ and the next floating point number is:
+
+$$2^{-52} \approx 2.22 \times 10^{-16}$$
+
+Any number smaller than this, when added to $1$, is rounded back to $1$.
+
+---
+
+## Round-off Error
+
+When a real number $x$ is stored as a floating point number $fl(x)$, the
+**relative round-off error** satisfies:
+
+$$\frac{|fl(x) - x|}{|x|} \leq \frac{\epsilon_{mach}}{2}$$
+
+This means every stored number already carries a relative error of at most
+$\frac{\epsilon_{mach}}{2}$.
+
+---
+
+## Catastrophic Cancellation
+
+One of the most dangerous phenomena in floating point arithmetic is
+**catastrophic cancellation** — the loss of significant digits when
+subtracting two nearly equal numbers.
+
+**Example:** Compute $f(x) = \sqrt{x+1} - \sqrt{x}$ for large $x$.
+
+Analytically:
+
+$$f(x) = \sqrt{x+1} - \sqrt{x} = \frac{1}{\sqrt{x+1} + \sqrt{x}}$$
+
+Both forms are mathematically equivalent, but numerically very different:
+
+**Proof of cancellation:**
+
+For large $x$, $\sqrt{x+1} \approx \sqrt{x}$. When both are rounded to
+floating point, their difference loses all significant digits:
+
+$$fl(\sqrt{x+1}) - fl(\sqrt{x}) \approx 0 \quad \text{(wrong!)}$$
+
+The rationalized form $\frac{1}{\sqrt{x+1} + \sqrt{x}}$ avoids this by
+never subtracting nearly equal numbers.
+```{python}
+#| echo: true
+#| code-fold: true
+#| code-summary: "See cancellation demo"
+
+import numpy as np
+import plotly.graph_objects as go
+
+x = np.logspace(0, 15, 300)
+
+# Naive formula — catastrophic cancellation
+f_naive = np.sqrt(x + 1) - np.sqrt(x)
+
+# Stable formula — rationalized
+f_stable = 1 / (np.sqrt(x + 1) + np.sqrt(x))
+
+# Relative error
+rel_error = np.abs(f_naive - f_stable) / np.abs(f_stable)
+
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(
+    x=x, y=f_naive,
+    mode="lines", name="Naive: √(x+1) - √x",
+    line=dict(color="#e74c3c", width=2)
+))
+
+fig.add_trace(go.Scatter(
+    x=x, y=f_stable,
+    mode="lines", name="Stable: 1/(√(x+1) + √x)",
+    line=dict(color="#2ecc71", width=2)
+))
+
+fig.update_layout(
+    title="Catastrophic Cancellation — f(x) = √(x+1) - √x",
+    xaxis_title="x",
+    yaxis_title="f(x)",
+    xaxis_type="log",
+    yaxis_type="log",
+    height=420,
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font=dict(color="#ffffff"),
+    legend=dict(orientation="h", y=-0.2)
+)
+
+fig.show()
+```
+```{python}
+#| echo: false
+#| fig-cap: "Relative error between naive and stable formulas"
+
+fig2 = go.Figure()
+
+fig2.add_trace(go.Scatter(
+    x=x, y=rel_error,
+    mode="lines",
+    name="Relative error",
+    line=dict(color="#f0a500", width=2)
+))
+
+fig2.add_hline(
+    y=np.finfo(float).eps,
+    line_dash="dash", line_color="gray",
+    annotation_text="ε_mach"
+)
+
+fig2.update_layout(
+    title="Relative Error — Naive vs Stable",
+    xaxis_title="x",
+    yaxis_title="Relative error",
+    xaxis_type="log",
+    yaxis_type="log",
+    height=380,
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font=dict(color="#ffffff")
+)
+
+fig2.show()
+```
+
+---
+
+## Associativity Failure
+
+In exact arithmetic, addition is associative:
+
+$$(a + b) + c = a + (b + c)$$
+
+In floating point arithmetic, **this is not always true**:
+```{python}
+#| echo: true
+
+a = 1e16
+b = -1e16
+c = 1.0
+
+print(f"(a + b) + c = {(a + b) + c}")   # correct: 1.0
+print(f"a + (b + c) = {a + (b + c)}")   # wrong: 0.0
+```
+
+**Why?** When $b + c$ is computed first, $c = 1.0$ is lost because it is
+much smaller than $b = -10^{16}$, falling below the precision threshold.
+
+---
+
+## Golden Rules of Floating Point
+
+::: {.callout-tip}
+## Rules to avoid numerical disasters
+
+1. **Never compare floats with `==`** — use `abs(a - b) < tolerance`
+2. **Avoid subtracting nearly equal numbers** — reformulate algebraically
+3. **Order operations carefully** — add small numbers before large ones
+4. **Know your machine epsilon** — errors below $\epsilon_{mach}$ are unavoidable
+:::
+
+---
+
+## Conclusions
+
+Floating point arithmetic is not exact — it is a careful approximation that
+works extremely well when used correctly. The key takeaways are:
+
+- Every floating point number carries a relative error of at most $\frac{\epsilon_{mach}}{2}$
+- Catastrophic cancellation can amplify errors dramatically
+- The order of operations matters in floating point
+- Numerical stability is not automatic — it must be designed into algorithms
+
+These ideas will appear repeatedly throughout the course, especially when
+analyzing the accuracy of root finding and integration methods.

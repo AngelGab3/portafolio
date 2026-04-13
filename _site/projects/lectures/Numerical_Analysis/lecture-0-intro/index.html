@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2025-01-10">
+<meta name="description" content="How computers represent and operate on real numbers">
+
+<title>Lecture 0: Floating Point Arithmetic – Gabriel Velazquez | Physics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../">
+<script src="../../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../site_libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../site_libs/bootstrap/bootstrap-4360c678b5099ca041644eb02eaa1bfe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script>
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+</script>
+<script type="module">import "https://cdn.plot.ly/plotly-3.4.0.min"</script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../index.html">
+    <span class="navbar-title">Gabriel Velazquez | Physics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../index.html"> 
+<span class="menu-text">Principal Page</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../about.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../proyectos.html"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#the-real-number-problem" id="toc-the-real-number-problem" class="nav-link" data-scroll-target="#the-real-number-problem">The Real Number Problem</a></li>
+  <li><a href="#ieee-754-standard" id="toc-ieee-754-standard" class="nav-link" data-scroll-target="#ieee-754-standard">IEEE 754 Standard</a></li>
+  <li><a href="#machine-epsilon" id="toc-machine-epsilon" class="nav-link" data-scroll-target="#machine-epsilon">Machine Epsilon</a></li>
+  <li><a href="#round-off-error" id="toc-round-off-error" class="nav-link" data-scroll-target="#round-off-error">Round-off Error</a></li>
+  <li><a href="#catastrophic-cancellation" id="toc-catastrophic-cancellation" class="nav-link" data-scroll-target="#catastrophic-cancellation">Catastrophic Cancellation</a></li>
+  <li><a href="#associativity-failure" id="toc-associativity-failure" class="nav-link" data-scroll-target="#associativity-failure">Associativity Failure</a></li>
+  <li><a href="#golden-rules-of-floating-point" id="toc-golden-rules-of-floating-point" class="nav-link" data-scroll-target="#golden-rules-of-floating-point">Golden Rules of Floating Point</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lecture 0: Floating Point Arithmetic</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">numerical-analysis</div>
+    <div class="quarto-category">python</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    How computers represent and operate on real numbers
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 10, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Before writing a single numerical algorithm, we need to understand how computers store and manipulate numbers. The answer is <strong>floating point arithmetic</strong> — and it has surprising consequences for numerical computation.</p>
+<hr>
+</section>
+<section id="the-real-number-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-real-number-problem">The Real Number Problem</h2>
+<p>Computers have finite memory. The real number line is infinite and continuous. This fundamental mismatch means that most real numbers <strong>cannot be represented exactly</strong> in a computer.</p>
+<p>For example:</p>
+<p><span class="math display">\[\frac{1}{3} = 0.333333\ldots \quad \text{(infinite decimal)}\]</span></p>
+<p><span class="math display">\[\sqrt{2} = 1.41421356\ldots \quad \text{(irrational)}\]</span></p>
+<p>Both must be approximated with a finite number of bits.</p>
+<hr>
+</section>
+<section id="ieee-754-standard" class="level2">
+<h2 class="anchored" data-anchor-id="ieee-754-standard">IEEE 754 Standard</h2>
+<p>Modern computers use the <strong>IEEE 754</strong> standard for floating point representation. A 64-bit double precision number has the form:</p>
+<p><span class="math display">\[x = (-1)^s \cdot m \cdot 2^e\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(s \in \{0, 1\}\)</span> — <strong>sign</strong> bit (1 bit)</li>
+<li><span class="math inline">\(m \in [1, 2)\)</span> — <strong>mantissa</strong> or significand (52 bits)</li>
+<li><span class="math inline">\(e \in [-1022, 1023]\)</span> — <strong>exponent</strong> (11 bits)</li>
+</ul>
+<p>The 64 bits are distributed as:</p>
+<pre><code>| 1 bit  | 11 bits  | 52 bits    |
+| sign   | exponent | mantissa   |</code></pre>
+<hr>
+</section>
+<section id="machine-epsilon" class="level2">
+<h2 class="anchored" data-anchor-id="machine-epsilon">Machine Epsilon</h2>
+<p>The <strong>machine epsilon</strong> <span class="math inline">\(\epsilon_{mach}\)</span> is the smallest number such that:</p>
+<p><span class="math display">\[1 + \epsilon_{mach} \neq 1\]</span></p>
+<p>For 64-bit doubles:</p>
+<p><span class="math display">\[\epsilon_{mach} = 2^{-52} \approx 2.22 \times 10^{-16}\]</span></p>
+<p><strong>Proof:</strong></p>
+<p>The mantissa has 52 bits, so the smallest representable difference between <span class="math inline">\(1\)</span> and the next floating point number is:</p>
+<p><span class="math display">\[2^{-52} \approx 2.22 \times 10^{-16}\]</span></p>
+<p>Any number smaller than this, when added to <span class="math inline">\(1\)</span>, is rounded back to <span class="math inline">\(1\)</span>.</p>
+<hr>
+</section>
+<section id="round-off-error" class="level2">
+<h2 class="anchored" data-anchor-id="round-off-error">Round-off Error</h2>
+<p>When a real number <span class="math inline">\(x\)</span> is stored as a floating point number <span class="math inline">\(fl(x)\)</span>, the <strong>relative round-off error</strong> satisfies:</p>
+<p><span class="math display">\[\frac{|fl(x) - x|}{|x|} \leq \frac{\epsilon_{mach}}{2}\]</span></p>
+<p>This means every stored number already carries a relative error of at most <span class="math inline">\(\frac{\epsilon_{mach}}{2}\)</span>.</p>
+<hr>
+</section>
+<section id="catastrophic-cancellation" class="level2">
+<h2 class="anchored" data-anchor-id="catastrophic-cancellation">Catastrophic Cancellation</h2>
+<p>One of the most dangerous phenomena in floating point arithmetic is <strong>catastrophic cancellation</strong> — the loss of significant digits when subtracting two nearly equal numbers.</p>
+<p><strong>Example:</strong> Compute <span class="math inline">\(f(x) = \sqrt{x+1} - \sqrt{x}\)</span> for large <span class="math inline">\(x\)</span>.</p>
+<p>Analytically:</p>
+<p><span class="math display">\[f(x) = \sqrt{x+1} - \sqrt{x} = \frac{1}{\sqrt{x+1} + \sqrt{x}}\]</span></p>
+<p>Both forms are mathematically equivalent, but numerically very different:</p>
+<p><strong>Proof of cancellation:</strong></p>
+<p>For large <span class="math inline">\(x\)</span>, <span class="math inline">\(\sqrt{x+1} \approx \sqrt{x}\)</span>. When both are rounded to floating point, their difference loses all significant digits:</p>
+<p><span class="math display">\[fl(\sqrt{x+1}) - fl(\sqrt{x}) \approx 0 \quad \text{(wrong!)}\]</span></p>
+<p>The rationalized form <span class="math inline">\(\frac{1}{\sqrt{x+1} + \sqrt{x}}\)</span> avoids this by never subtracting nearly equal numbers.</p>
+<div id="227fc0bc" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>See cancellation demo</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.logspace(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">300</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Naive formula — catastrophic cancellation</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>f_naive <span class="op">=</span> np.sqrt(x <span class="op">+</span> <span class="dv">1</span>) <span class="op">-</span> np.sqrt(x)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Stable formula — rationalized</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>f_stable <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (np.sqrt(x <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> np.sqrt(x))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Relative error</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>rel_error <span class="op">=</span> np.<span class="bu">abs</span>(f_naive <span class="op">-</span> f_stable) <span class="op">/</span> np.<span class="bu">abs</span>(f_stable)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> go.Figure()</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>fig.add_trace(go.Scatter(</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>x, y<span class="op">=</span>f_naive,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span><span class="st">"lines"</span>, name<span class="op">=</span><span class="st">"Naive: √(x+1) - √x"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span><span class="st">"#e74c3c"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>fig.add_trace(go.Scatter(</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>x, y<span class="op">=</span>f_stable,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    mode<span class="op">=</span><span class="st">"lines"</span>, name<span class="op">=</span><span class="st">"Stable: 1/(√(x+1) + √x)"</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    line<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span><span class="st">"#2ecc71"</span>, width<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>fig.update_layout(</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"Catastrophic Cancellation — f(x) = √(x+1) - √x"</span>,</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    xaxis_title<span class="op">=</span><span class="st">"x"</span>,</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    yaxis_title<span class="op">=</span><span class="st">"f(x)"</span>,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    xaxis_type<span class="op">=</span><span class="st">"log"</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    yaxis_type<span class="op">=</span><span class="st">"log"</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    height<span class="op">=</span><span class="dv">420</span>,</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    plot_bgcolor<span class="op">=</span><span class="st">"rgba(0,0,0,0)"</span>,</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    paper_bgcolor<span class="op">=</span><span class="st">"rgba(0,0,0,0)"</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    font<span class="op">=</span><span class="bu">dict</span>(color<span class="op">=</span><span class="st">"#ffffff"</span>),</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    legend<span class="op">=</span><span class="bu">dict</span>(orientation<span class="op">=</span><span class="st">"h"</span>, y<span class="op">=-</span><span class="fl">0.2</span>)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>fig.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="dd8182ab-4a80-4ab5-b4b3-b5122ec21b24" class="plotly-graph-div" style="height:420px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("dd8182ab-4a80-4ab5-b4b3-b5122ec21b24")) {                    Plotly.newPlot(                        "dd8182ab-4a80-4ab5-b4b3-b5122ec21b24",                        [{"line":{"color":"#e74c3c","width":2},"mode":"lines","name":"Naive: \u221a(x+1) - \u221ax","x":{"dtype":"f8","bdata":"AAAAAAAA8D8k2RS6jvXxP007aPOHKPQ\u002f9euF5nCg9j9ex8iMumX5PzJoWHzegfw\u002fnmcPT3\u002f\u002f\u002fz+dWIyARvUBQPfx0eE2KARA3MWl5xWgBkBNHnBpVGUJQF\u002fZPddrgQxAlFokoP7+D0CUTSZI\u002fvQRQD2vgdHlJxRAaZIz6rqfFkBhN7JH7mQZQOFY8DP5gBxAwNA+833+H0B5s+IQtvQhQP9td8KUJyRA3Esv7l+fJkAkDI8niGQpQHzfb5KGgCxA\u002f8FeSP39L0C6hcHabfQxQB8ps7RDJzRAd+yY8wSfNkAmlgYJImQ5QOxlvPITgDxAMyaEn3z9P0DKv8KlJfRBQH3bNKjyJkRAem5w+qmeRkDyzhjsu2NJQPLk1VShf0xAOfWu+Pv8T0AWXeZx3fNRQPp\u002f\u002fJyhJlRAJsy1Ak+eVkATsMXQVWNZQF1VvLguf1xA7CbfU3v8X0AQWSw\u002flfNhQHQRCpNQJmRAuv9oDPSdZkAbMw2372JpQN+vbx68fmxAObMUsfr7b0Amr5QNTfNxQNeKXYr\u002fJXRAdQOKF5mddkCLUe+eiWJ5QEnt74VJfnxA7ZFPEHr7f0DPWh\u002fdBPOBQPbm9oKuJYRAodEYJD6dhkD9BGyII2KJQE4GPe\u002fWfYxA+rqPcfn6j0BxV8ytvPKRQMAg1nxdJZRAcmQVMuOclkDxRoNzvWGZQMLzVlpkfZxALSbV1Hj6n0CIoJt\u002fdPKhQAoz+3cMJaRANrZ\u002fQYicpkD7EDVgV2GpQFauPcfxfKxAecsfOvj5r0B5MY1SLPKxQMEYZnS7JLRAIsFXUi2ctkCuXIFO8WC5QN4u8TV\u002ffLxAq6JvoXf5v0C\u002fBaEm5PHBQLzMFnJqJMRAfH+dZNKbxkCRI2g+i2DJQAxucaYMfMxAraPECvf4z0DGGNf7m\u002fHRQOdJDXEZJNRAjetQeHeb1kAiX+kvJWDZQLRkvhiae9xAZ8Yednb430D1ZS\u002fSU\u002fHhQCCLSXHII+RAj\u002f9xjRyb5kAMCQUjv1\u002fpQIEL2Iwne+xAsQJ+4\u002fX370DQ6KmpC\u002fHxQDuLy3J3I\u002fRAxbUApMGa9kDNGrsXWV\u002f5QFZbvgK1evxAWFDiUnX3\u002f0C\u002fnEaCw\u002fABQTNFk3UmIwRBYgj9u2aaBkHzjQsO814JQeZMcXpCegxBY6dLxPT2D0EyfQVce\u002fARQd2zoHnVIhRBwvFm1QuaFkH+W\u002fYFjV4ZQfXY8PPPeRxBn\u002f+5N3T2H0GQheY2M\u002fAhQRzS836EIiRBG2w+8LCZJkGXfnv\u002fJl4pQTf4PG9deSxB7VAtrfP1L0FfsekS6+8xQceajIUzIjRBrXGDDFaZNkE+75r6wF05QY+jVezqeDxBHZOlJHP1P0EF\u002fA7wou9BQdcIa43iIURBrvw1KvuYRkGCp1T3Wl1JQbLTOmt4eExBM74invL0T0HqYFbOWu9RQSIXj5aRIVRBegdWSaCYVkHhoKj19FxZQWOB7OsFeFxB\u002fsmkGXL0X0GU27+tEu9hQYHA+KBAIWRBRozjaUWYZkEH1Zb1jlxpQValam6Td2xBYK4rl\u002fHzb0FpZ0uOyu5xQev\u002fp6zvIHRBR4Xei+qXdkF0PR\u002f3KFx5QW84tfIgd3xBKGO3FnHzf0Hb\u002f\u002fhvgu6BQTnQnLmeIIRB2exGr4+XhkG100H6wluJQWQzzHiudoxBXOBHmPDyj0FSoMhSOu6RQU0s18dNIJRBMr0c1DSXlkFLkf7+XFuZQeiOrwA8dpxBuh3dG3Dyn0FdRLo28u2hQQoPV9f8H6RBlfBf+tmWpkHhb1UF91qpQd9DX4rJdaxBRxN3oe\u002fxr0E8580bqu2xQVNzHOirH7RBQ4EQIn+WtkH4aEYNkVq5QQBL2xVXdbxB07gVKW\u002fxv0GShAMCYu3BQfNTJ\u002fpaH8RBgGkuSySWxkEddtEWK1rJQQ2dI6PkdMxBQQa5su7wz0G+F1vpGe3RQfyrdw0KH9RBc6O5dcmV1kHhkPYhxVnZQc0yODJydNxBc\u002fNgPm7w30EynNTR0ezhQTp2DSK5HuRBlSmyoW6V5kG0srUuX1npQQQFGcP\u002fc+xBSngNzO3v70FfDXC7iezxQZCt6DdoHvRBDvYXzxOV9kFg1Q49+Vj5QVYMxlWNc\u002fxBqoy+W23v\u002f0G3Zi2mQewBQuJMCU8XHgRCIQPr\u002fbiUBkJY8gFNk1gJQspBP+oacwxCUSh07ezuD0KtowyS+esRQhJPb2fGHRRCEUsrLl6UFkIpA49eLVgZQgaehICochxCaUMugWzuH0Kevw1\u002fseshQgSvGoF1HSRCIcjYXwOUJkJkAbZxx1cpQs4Zlhg2cixCs9XsFuztL0IltjBtaesxQptnC5wkHTRClXTzkqiTNkKZ5naGYVc5Quetc7LDcTxCENevrmvtP0KhgnVcIetBQqVzQbjTHERCsEp7x02TRkJVrNGc+1ZJQhhTHU5RcUxCZD93SOvsT0KDINxM2epRQjLOvNWCHFRCm0Rw\u002ffKSVkIqTMa0lVZZQicCk+vecFxCkgZD5GrsX0I\u002fi2Q+kephQhFyffQxHGRCzlzSNJiSZkKKv1TOL1ZpQtiz1IpscGxCfSQTgurrb0JGvg4xSepxQiNagxThG3RCc42hbT2SdkI\u002fAH3pyVV5QtNg4iv6b3xCCZHnIWrrf0ILtdokAeqBQk6BzjWQG4RCzdDdp+KRhkK7Bz8GZFWJQh0CvM6Hb4xC9EPAw+nqj0ICa8gZuemRQnXiXlg\u002fG5RCICGH44eRlkKQz5ok\u002flSZQl2QYXMVb5xCbTWdZ2nqn0KH29cPcemhQn14NHzuGqRCsHidIC2RpkJMUZBEmFSpQlkE0xmjbqxCMV1+Denpr0I4AgkHKemxQjI+T6GdGrRCwdEgX9KQtkKAhh9mMlS5QthWEMIwbrxCJrNjtWjpv0Jy2lv\u002f4OjBQqYur8dMGsRCfSYRn3eQxkK9aEiJzFPJQp+AGWy+bcxCLy9NX+joz0KoX9D4mOjRQqhEVO\u002f7GdRCXXFu4ByQ1kJ18QquZlPZQnd67hdMbdxCMMk6C2jo30JOjWbzUOjhQhx7PhirGeRCiqw4I8KP5kJ0GmfUAFPpQgQ9j8XZbOxCD3ksuefn70LXXh7vCOjxQuXMbUJaGfRCSdJvZ2eP9kIu3Vz8mlL5QlDB+3RnbPxCiTYiaWfn\u002f0K1z\u002ffrwOcBQ+k04m0JGQRD39wTrQyPBkMyM+wlNVIJQwAANCb1awxD"},"y":{"dtype":"f8","bdata":"NO\u002f8mXmC2j90FMvXF2\u002fZP8jNH4TAX9g\u002fWA+bMCJV1z+oextx3U\u002fWPxxFLC+DUNU\u002fGLtbbZNX1D\u002f03QZ+fGXTP7R3gKuaetI\u002fZIB9SjiX0T+Q1q0rjrvQPwBYG72Iz88\u002fIKCpa+Y3zj+AAMX6SLDMPyAt66OpOMs\u002fQNhmGOrQyT9g+XBk13jIP2Dk58ksMMc\u002fIGdigZb2xT\u002fwqJFUtMvEP0BwwAgcr8M\u002f0EKlk1ugwj9A\u002fZsX+57BP6COrqZ+qsA\u002fgKNCm8+Evz\u002fAGhXTbcy9P8BLzJbYKrw\u002fgBtQWxKfuj+AxzUAISi5P0Cl2BwPxbc\u002fwMdoC+10tj+Anie60Ta1P8CMgkrbCbQ\u002fALMchS\u002ftsj8A2C8p\u002fN+xP8ANAR134bA\u002fAEb9CL3hrz8A5fyE8RquPwB2ANEobaw\u002fAKOhMBDXqj8AouK0ZFepPwBWcdfy7Kc\u002fAPWLCJaWpj8ACQszOFOlPwDrgTnRIaQ\u002fAHPnbmYBoz8AL8sMCvGhPwCEvaja76A\u002fAMiCVAX6nz8ATLSEby+ePwAYHst0fpw\u002fAGgbkqrlmj8A2NjGuWOZPwDI1+Jd95c\u002fAHD3\u002fWOflj8A+FzpqVqVPwCsblMdKJQ\u002fAPD29LoGkz8AsGvHjfWRPwB4Q0Su85A\u002fAKwwrUEAkD8AsCG68jSOPwBgp0Ikg4w\u002fAMAtN6fpij8AIF5WH2eJPwCwprxD+oc\u002fAOA71d2hhj8AEClZyFyFPwCw1VvuKYQ\u002fAHBjZEoIgz8AIE+T5faBPwDAv9PW9IA\u002fACDyF0IBgD8AgG5ArzZ+PwCA9pemhHw\u002fAACs6Pfqej8AgEqfRWh5PwDAc7tF+3c\u002fAMBIuMCidj8AgGmEkF11PwAAhYifKnQ\u002fAIC0u+cIcz8AwObEcfdxPwCAoShU9XA\u002fAMBwgrIBcD8AAMeSeTduPwAA5j1dhWw\u002fAACbT53raj8AAODb22hpPwAAIpfO+2c\u002fAAC8vD2jZj8AACkFA15lPwAAGKsIK2Q\u002fAAB\u002ffkgJYz8AAPgEy\u002fdhPwAAmqam9WA\u002fAACo5v4BYD8AAMxOBzhePwAABPHghVw\u002fAAC43hfsWj8AAIwRTmlZPwAAQCc5\u002fFc\u002fAACIR6GjVj8AAOAZYF5VPwAAMMpfK1Q\u002fAACQG5oJUz8AAFCIF\u002fhRPwAAtG7u9VA\u002fAABMSUICUD8AAIDlhThOPwAA0OdXhkw\u002fAABguIfsSj8AACBGt2lJPwAAICWc\u002fEc\u002fAACgdP6jRj8AAFDUt15FPwAAIGmyK0Q\u002fAADg7+cJQz8AADDdYPhBPwAAAIoz9kA\u002fAAAwbIMCQD8AAAC0ADk+PwAAwLDLhjw\u002fAADA5fTsOj8AAEA7Hmo5PwAAgD\u002f9\u002fDc\u002fAABAC1qkNj8AAAA5Dl81PwAAAOkDLDQ\u002fAADA0jQKMz8AAEBnqfgxPwAAwPp39jA\u002fAADA\u002f8MCMD8AAACSejkuPwAAALA+hyw\u002fAAAAaWHtKj8AAACihGopPwAAAOJd\u002fSc\u002fAAAAPrWkJj8AAABJZF8lPwAAACJVLCQ\u002fAAAAeoEKIz8AAAC\u002f8fghPwAAAEK89iA\u002fAAAAcQQDID8AAAA09DkePwAAAICxhxw\u002fAAAAxM3tGj8AAADo6moZPwAAAGi+\u002fRc\u002fAAAAVBClFj8AAABIul8VPwAAAEimLBQ\u002fAAAAFM4KEz8AAAAMOvkRPwAAAIAA9xA\u002fAAAA3EQDED8AAADQbToOPwAAAEAkiAw\u002fAAAAEDruCj8AAAAgUWsJPwAAAOAe\u002fgc\u002fAAAAcGulBj8AAABAEGAFPwAAAHD3LAQ\u002fAAAAsBoLAz8AAABggvkBPwAAAMBE9wA\u002fAAAAQIUDAD8AAABA5zr+PgAAAACXiPw+AAAAgKbu+j4AAABAt2v5PgAAAIB\u002f\u002fvc+AAAAgMal9j4AAABAZmD1PgAAAIBILfQ+AAAAQGcL8z4AAADAyvnxPgAAAACJ9\u002fA+AAAAgMUD8D4AAAAAYTvuPgAAAAAJiew+AAAAABPv6j4AAAAAHWzpPgAAAADf\u002fuc+AAAAACKm5j4AAAAAvGDlPgAAAACaLeQ+AAAAALQL4z4AAAAAE\u002frhPgAAAADN9+A+AAAAAAYE4D4AAAAA3DvePgAAAAB8idw+AAAAAIDv2j4AAAAAhGzZPgAAAABA\u002f9c+AAAAAHym1j4AAAAAFGHVPgAAAADsLdQ+AAAAAAAM0z4AAAAAWPrRPgAAAAAQ+NA+AAAAAEgE0D4AAAAAUDzOPgAAAADwicw+AAAAAODvyj4AAAAA4GzJPgAAAACg\u002f8c+AAAAANCmxj4AAAAAcGHFPgAAAABALsQ+AAAAAFAMwz4AAAAAoPrBPgAAAABg+MA+AAAAAIAEwD4AAAAAwDy+PgAAAABAirw+AAAAAEDwuj4AAAAAgG25PgAAAAAAALg+AAAAAECntj4AAAAAwGG1PgAAAACALrQ+AAAAAIAMsz4AAAAAAPuxPgAAAADA+LA+AAAAAMAEsD4AAAAAAD2uPgAAAAAAiqw+AAAAAADwqj4AAAAAAG6pPgAAAAAAAag+AAAAAACnpj4AAAAAAGKlPgAAAAAAL6Q+AAAAAAANoz4AAAAAAPuhPgAAAAAA+aA+AAAAAAAFoD4AAAAAADyePgAAAAAAiJw+AAAAAADwmj4AAAAAAHCZPgAAAAAAAJg+AAAAAAColj4AAAAAAGSVPgAAAAAAMJQ+AAAAAAAQkz4AAAAAAPyRPgAAAAAA\u002fJA+AAAAAAAEkD4AAAAAAECOPgAAAAAAkIw+AAAAAADwij4AAAAAAHCJPgAAAAAAAIg+AAAAAACwhj4AAAAAAHCFPgAAAAAAMIQ+AAAAAAAAgz4AAAAAAACCPgAAAAAAAIE+AAAAAAAQgD4AAAAAAEB+PgAAAAAAwHw+AAAAAAAAez4AAAAAAEB5PgAAAAAAAHg+AAAAAADAdj4AAAAAAIB1PgAAAAAAQHQ+AAAAAAAAcz4AAAAAAAByPgAAAAAAAHE+AAAAAAAAcD4AAAAAAABuPgAAAAAAAGw+AAAAAAAAaz4AAAAAAABpPgAAAAAAAGg+AAAAAAAAZj4AAAAAAABlPgAAAAAAAGU+AAAAAAAAYz4AAAAAAABiPgAAAAAAAGE+AAAAAAAAYD4AAAAAAABgPgAAAAAAAFw+AAAAAAAAWD4AAAAAAABcPgAAAAAAAFg+AAAAAAAAVD4AAAAAAABUPgAAAAAAAFQ+AAAAAAAAVD4AAAAAAABUPgAAAAAAAFQ+"},"type":"scatter"},{"line":{"color":"#2ecc71","width":2},"mode":"lines","name":"Stable: 1\u002f(\u221a(x+1) + \u221ax)","x":{"dtype":"f8","bdata":"AAAAAAAA8D8k2RS6jvXxP007aPOHKPQ\u002f9euF5nCg9j9ex8iMumX5PzJoWHzegfw\u002fnmcPT3\u002f\u002f\u002fz+dWIyARvUBQPfx0eE2KARA3MWl5xWgBkBNHnBpVGUJQF\u002fZPddrgQxAlFokoP7+D0CUTSZI\u002fvQRQD2vgdHlJxRAaZIz6rqfFkBhN7JH7mQZQOFY8DP5gBxAwNA+833+H0B5s+IQtvQhQP9td8KUJyRA3Esv7l+fJkAkDI8niGQpQHzfb5KGgCxA\u002f8FeSP39L0C6hcHabfQxQB8ps7RDJzRAd+yY8wSfNkAmlgYJImQ5QOxlvPITgDxAMyaEn3z9P0DKv8KlJfRBQH3bNKjyJkRAem5w+qmeRkDyzhjsu2NJQPLk1VShf0xAOfWu+Pv8T0AWXeZx3fNRQPp\u002f\u002fJyhJlRAJsy1Ak+eVkATsMXQVWNZQF1VvLguf1xA7CbfU3v8X0AQWSw\u002flfNhQHQRCpNQJmRAuv9oDPSdZkAbMw2372JpQN+vbx68fmxAObMUsfr7b0Amr5QNTfNxQNeKXYr\u002fJXRAdQOKF5mddkCLUe+eiWJ5QEnt74VJfnxA7ZFPEHr7f0DPWh\u002fdBPOBQPbm9oKuJYRAodEYJD6dhkD9BGyII2KJQE4GPe\u002fWfYxA+rqPcfn6j0BxV8ytvPKRQMAg1nxdJZRAcmQVMuOclkDxRoNzvWGZQMLzVlpkfZxALSbV1Hj6n0CIoJt\u002fdPKhQAoz+3cMJaRANrZ\u002fQYicpkD7EDVgV2GpQFauPcfxfKxAecsfOvj5r0B5MY1SLPKxQMEYZnS7JLRAIsFXUi2ctkCuXIFO8WC5QN4u8TV\u002ffLxAq6JvoXf5v0C\u002fBaEm5PHBQLzMFnJqJMRAfH+dZNKbxkCRI2g+i2DJQAxucaYMfMxAraPECvf4z0DGGNf7m\u002fHRQOdJDXEZJNRAjetQeHeb1kAiX+kvJWDZQLRkvhiae9xAZ8Yednb430D1ZS\u002fSU\u002fHhQCCLSXHII+RAj\u002f9xjRyb5kAMCQUjv1\u002fpQIEL2Iwne+xAsQJ+4\u002fX370DQ6KmpC\u002fHxQDuLy3J3I\u002fRAxbUApMGa9kDNGrsXWV\u002f5QFZbvgK1evxAWFDiUnX3\u002f0C\u002fnEaCw\u002fABQTNFk3UmIwRBYgj9u2aaBkHzjQsO814JQeZMcXpCegxBY6dLxPT2D0EyfQVce\u002fARQd2zoHnVIhRBwvFm1QuaFkH+W\u002fYFjV4ZQfXY8PPPeRxBn\u002f+5N3T2H0GQheY2M\u002fAhQRzS836EIiRBG2w+8LCZJkGXfnv\u002fJl4pQTf4PG9deSxB7VAtrfP1L0FfsekS6+8xQceajIUzIjRBrXGDDFaZNkE+75r6wF05QY+jVezqeDxBHZOlJHP1P0EF\u002fA7wou9BQdcIa43iIURBrvw1KvuYRkGCp1T3Wl1JQbLTOmt4eExBM74invL0T0HqYFbOWu9RQSIXj5aRIVRBegdWSaCYVkHhoKj19FxZQWOB7OsFeFxB\u002fsmkGXL0X0GU27+tEu9hQYHA+KBAIWRBRozjaUWYZkEH1Zb1jlxpQValam6Td2xBYK4rl\u002fHzb0FpZ0uOyu5xQev\u002fp6zvIHRBR4Xei+qXdkF0PR\u002f3KFx5QW84tfIgd3xBKGO3FnHzf0Hb\u002f\u002fhvgu6BQTnQnLmeIIRB2exGr4+XhkG100H6wluJQWQzzHiudoxBXOBHmPDyj0FSoMhSOu6RQU0s18dNIJRBMr0c1DSXlkFLkf7+XFuZQeiOrwA8dpxBuh3dG3Dyn0FdRLo28u2hQQoPV9f8H6RBlfBf+tmWpkHhb1UF91qpQd9DX4rJdaxBRxN3oe\u002fxr0E8580bqu2xQVNzHOirH7RBQ4EQIn+WtkH4aEYNkVq5QQBL2xVXdbxB07gVKW\u002fxv0GShAMCYu3BQfNTJ\u002fpaH8RBgGkuSySWxkEddtEWK1rJQQ2dI6PkdMxBQQa5su7wz0G+F1vpGe3RQfyrdw0KH9RBc6O5dcmV1kHhkPYhxVnZQc0yODJydNxBc\u002fNgPm7w30EynNTR0ezhQTp2DSK5HuRBlSmyoW6V5kG0srUuX1npQQQFGcP\u002fc+xBSngNzO3v70FfDXC7iezxQZCt6DdoHvRBDvYXzxOV9kFg1Q49+Vj5QVYMxlWNc\u002fxBqoy+W23v\u002f0G3Zi2mQewBQuJMCU8XHgRCIQPr\u002fbiUBkJY8gFNk1gJQspBP+oacwxCUSh07ezuD0KtowyS+esRQhJPb2fGHRRCEUsrLl6UFkIpA49eLVgZQgaehICochxCaUMugWzuH0Kevw1\u002fseshQgSvGoF1HSRCIcjYXwOUJkJkAbZxx1cpQs4Zlhg2cixCs9XsFuztL0IltjBtaesxQptnC5wkHTRClXTzkqiTNkKZ5naGYVc5Quetc7LDcTxCENevrmvtP0KhgnVcIetBQqVzQbjTHERCsEp7x02TRkJVrNGc+1ZJQhhTHU5RcUxCZD93SOvsT0KDINxM2epRQjLOvNWCHFRCm0Rw\u002ffKSVkIqTMa0lVZZQicCk+vecFxCkgZD5GrsX0I\u002fi2Q+kephQhFyffQxHGRCzlzSNJiSZkKKv1TOL1ZpQtiz1IpscGxCfSQTgurrb0JGvg4xSepxQiNagxThG3RCc42hbT2SdkI\u002fAH3pyVV5QtNg4iv6b3xCCZHnIWrrf0ILtdokAeqBQk6BzjWQG4RCzdDdp+KRhkK7Bz8GZFWJQh0CvM6Hb4xC9EPAw+nqj0ICa8gZuemRQnXiXlg\u002fG5RCICGH44eRlkKQz5ok\u002flSZQl2QYXMVb5xCbTWdZ2nqn0KH29cPcemhQn14NHzuGqRCsHidIC2RpkJMUZBEmFSpQlkE0xmjbqxCMV1+Denpr0I4AgkHKemxQjI+T6GdGrRCwdEgX9KQtkKAhh9mMlS5QthWEMIwbrxCJrNjtWjpv0Jy2lv\u002f4OjBQqYur8dMGsRCfSYRn3eQxkK9aEiJzFPJQp+AGWy+bcxCLy9NX+joz0KoX9D4mOjRQqhEVO\u002f7GdRCXXFu4ByQ1kJ18QquZlPZQnd67hdMbdxCMMk6C2jo30JOjWbzUOjhQhx7PhirGeRCiqw4I8KP5kJ0GmfUAFPpQgQ9j8XZbOxCD3ksuefn70LXXh7vCOjxQuXMbUJaGfRCSdJvZ2eP9kIu3Vz8mlL5QlDB+3RnbPxCiTYiaWfn\u002f0K1z\u002ffrwOcBQ+k04m0JGQRD39wTrQyPBkMyM+wlNVIJQwAANCb1awxD"},"y":{"dtype":"f8","bdata":"M+\u002f8mXmC2j91FMvXF2\u002fZP8jNH4TAX9g\u002fWg+bMCJV1z+rextx3U\u002fWPxpFLC+DUNU\u002fFrtbbZNX1D\u002f13QZ+fGXTP7V3gKuaetI\u002fZoB9SjiX0T+R1q0rjrvQPwNYG72Iz88\u002fF6Cpa+Y3zj96AMX6SLDMPxot66OpOMs\u002fRNhmGOrQyT9q+XBk13jIP2bk58ksMMc\u002fFWdigZb2xT\u002fuqJFUtMvEP0ZwwAgcr8M\u002fy0Klk1ugwj86\u002fZsX+57BP6KOrqZ+qsA\u002fh6NCm8+Evz\u002fkGhXTbcy9P5JLzJbYKrw\u002fehtQWxKfuj+IxzUAISi5P3Ol2BwPxbc\u002fccdoC+10tj9Onie60Ta1P+SMgkrbCbQ\u002fArMchS\u002ftsj\u002fk1y8p\u002fN+xP6wNAR134bA\u002fDkb9CL3hrz9h5fyE8RquP\u002fV1ANEobaw\u002fmaOhMBDXqj8DouK0ZFepP4RWcdfy7Kc\u002fQvWLCJaWpj8ICQszOFOlP7bqgTnRIaQ\u002fVHPnbmYBoz9fLssMCvGhP1iEvaja76A\u002fHsqCVAX6nz92TrSEby+ePzcZHst0fpw\u002f2WUbkqrlmj\u002fw19jGuWOZP0PL1+Jd95c\u002fzG73\u002fWOflj+v+FzpqVqVP5eublMdKJQ\u002fR+329LoGkz+QsmvHjfWRP2F5Q0Su85A\u002fCKwwrUEAkD+1tiG68jSOP3Vpp0Ikg4w\u002f8r4tN6fpij9SHV5WH2eJP2euprxD+oc\u002fXNk71d2hhj\u002frFylZyFyFPxK21VvuKYQ\u002fVmljZEoIgz\u002f8IE+T5faBP4e5v9PW9IA\u002f2ivyF0IBgD+NbG5ArzZ+P0R29pemhHw\u002fTg+s6Pfqej+Sn0qfRWh5P8ysc7tF+3c\u002fDMlIuMCidj\u002fjpmmEkF11Pwr0hIifKnQ\u002fTX20u+cIcz8Hv+bEcfdxP75aoShU9XA\u002fdO9wgrIBcD\u002ffBseSeTduP3QP5j1dhWw\u002fxv6aT53raj+G\u002fd\u002fb22hpP4cRIpfO+2c\u002fYpm7vD2jZj\u002fv3CgFA15lP9myF6sIK2Q\u002fbkZ\u002ffkgJYz\u002fzevgEy\u002fdhP\u002fdHmqam9WA\u002fIbin5v4BYD+d9c1OBzhePwh3BPHghVw\u002fV3K33hfsWj+iyo0RTmlZPwJiQCc5\u002fFc\u002fdDyJR6GjVj8BbeIZYF5VP9BfMspfK1Q\u002fG6qPG5oJUz\u002fQcFKIF\u002fhRP\u002fO1tG7u9VA\u002fqH5NSUICUD8roHnlhThOP4r9z+dXhkw\u002fB4dduIfsSj+fAxRGt2lJP61WGiWc\u002fEc\u002fc3WVdP6jRj\u002fIxEbUt15FP3KTHGmyK0Q\u002fKB\u002fe7+cJQz+BlijdYPhBP7Hj\u002fYkz9kA\u002fdsEwbIMCQD\u002fFcwe0ADk+P\u002fx0tLDLhjw\u002fG9zH5fTsOj8bHWY7Hmo5P7jVbD\u002f9\u002fDc\u002f0eMuC1qkNj82ewc5Dl81P0G14OgDLDQ\u002fhdbW0jQKMz\u002fgky1nqfgxP2T+1\u002fp39jA\u002fuHne\u002f8MCMD\u002fXhfCRejkuP846b68+hyw\u002fDYdhaWHtKj\u002fIehiihGopPy+Y+uFd\u002fSc\u002fXl45PbWkJj9QaV5JZF8lPxyQzCFVLCQ\u002f6y5eeoEKIz\u002fd2FW\u002f8fghPyYO4kG89iA\u002f2lB\u002fcAQDID\u002fGKhw19DkeP0A693yxhxw\u002fy6TLw83tGj87hVXm6moZP7i\u002fuGe+\u002fRc\u002f+ZUxVxClFj9NJp1Ful8VP8w29kmmLBQ\u002fNHTvE84KEz8TW+ALOvkRP8xiRX8A9xA\u002fiL8e2UQDED+jaQbLbToOP34GjD8kiAw\u002f2AkwFTruCj\u002fqJCkjUWsJP\u002futZece\u002fgc\u002fmqM3bGulBj9s39g9EGAFPwfW4273LAQ\u002f1QbqqhoLAz9PT11WgvkBPwC1DLtE9wA\u002f2Ph\u002fQIUDAD+Z0w5f5zr+Poj9vQCXiPw+zpGZZabu+j6DqlZft2v5PrJEsWZ\u002f\u002fvc+nMsTgcal9j6zFBc2ZmD1PrYl95NILfQ+8uQlQmcL8z4E4zChyvnxPmTOOveI9\u002fA+BuFTqMUD8D4CdQ30YDvuPjtZ8cIJiew+BxELtxLv6j58A4+cHWzpPhCSB+ff\u002fuc+2jH4liGm5j49NlkvvGDlPsihCLqZLeQ+VhpZ2rML4z5HLPTsEvrhPrdqUDTN9+A+TLkGEQYE4D5YX7iK2jvePpI0v4Z8idw+qUcFCn\u002fv2j4zdT7bg2zZPoqiw2hA\u002f9c+N2cxrnym1j5Cp98pEmHVPq9vTuHqLdQ+my+xcwAM0z6\u002fdc05W\u002frRPrC9bXIR+NA+VpazekYE0D7iHj0jVDzOPqLdTUzvicw+fWyoXuvvyj7+FoAb6mzJPsM+\u002fOug\u002f8c+MZXSxtemxj5phbolaGHFPkAd1gk8LsQ+J4s5Dk0Mwz4EVsaHo\u002frBPsPXmrFV+MA+mEBh5YYEwD4KHae9zTy+Ps7tphNiirw+s5L8tFfwuj7xs1pdUG25PtMdt3ABALg+lIrg4DKntj5K3O0ivmG1Pv0RozONLrQ+UQr1qZkMsz5GNuHW6\u002fqxPnLA2fGZ+LA+YG0RUccEsD7wOflZRz2uPg7RzNzUiqw+Y8QDDcTwqj67A9Cgtm2pPh6y9fZhAKg+h39c\u002fI2npj72snohFGKlPpErtl7eLqQ+J2jkRuYMoz5PtB4nNPuhPtv8KjPe+KA+EY3EvQcFoD55MzT4wD2ePrInwKdHi5w+GIm+ZjDxmj40eeDlHG6ZPuJcuH7CAJg+ZMZGGemnlj5JT2EhamKVPlGlD4svL5Q+9tYH5TINkz7o+n54fPuRPo6xjnUi+ZA+3L56K0gFkD7mPliYOj6OPlofgXS6i4w+7Qctwpzxij7MNYwsg26JPuY6\u002fwcjAYg+InifN0Sohj7axqEiwGKFPuqRr7iAL4Q+BGdfhH8Ngz5BGALLxPuBPtXqBLlm+YA+hw00mogFgD5bb2U6tD5+PuvID0MtjHw+zU9PHwnyej7LRtN06W55PgBYypKDAXg+M59mV5+odj4FIzwlFmN1Puv5lefRL3Q+DCDrJMwNcz5SE6geDfxxPg2vjf2q+XA+3X7wCckFcD4\u002fz1veLT9uPustbBOgjGw+oWklfnXyaj5qtLW+T29pPrm7GR\u002fkAWg+mkKcePqoZj5HajApbGNlPjjjwhcjMGQ+hQerxhgOYz5Q8XBzVfxhPhIDKUPv+WA+XxewegkGYD4HZzuEpz9ePkRWluUSjVw+o1yv3uHyWj5vhTMKtm9ZPpFs7axEAlg+bmhAm1WpVj5Qon4uwmNVPjRTNkl0MFQ+fyKfaWUOUz7etlzJnfxRPj\u002fr1okz+lA+"},"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"xaxis":{"title":{"text":"x"},"type":"log"},"yaxis":{"title":{"text":"f(x)"},"type":"log"},"font":{"color":"#ffffff"},"legend":{"orientation":"h","y":-0.2},"title":{"text":"Catastrophic Cancellation \u2014 f(x) = \u221a(x+1) - \u221ax"},"height":420,"plot_bgcolor":"rgba(0,0,0,0)","paper_bgcolor":"rgba(0,0,0,0)"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('dd8182ab-4a80-4ab5-b4b3-b5122ec21b24');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+<div id="eae9b287" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script>if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.4.0.min.js" integrity="sha256-KEmPoupLpFyGMyGAiOsiNDbKDKAvxXAn/W+oQa0ZAfk=" crossorigin="anonymous"></script>                <div id="07c5a809-9d17-4150-b657-6bd30f66e314" class="plotly-graph-div" style="height:380px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("07c5a809-9d17-4150-b657-6bd30f66e314")) {                    Plotly.newPlot(                        "07c5a809-9d17-4150-b657-6bd30f66e314",                        [{"line":{"color":"#f0a500","width":2},"mode":"lines","name":"Relative error","x":{"dtype":"f8","bdata":"AAAAAAAA8D8k2RS6jvXxP007aPOHKPQ\u002f9euF5nCg9j9ex8iMumX5PzJoWHzegfw\u002fnmcPT3\u002f\u002f\u002fz+dWIyARvUBQPfx0eE2KARA3MWl5xWgBkBNHnBpVGUJQF\u002fZPddrgQxAlFokoP7+D0CUTSZI\u002fvQRQD2vgdHlJxRAaZIz6rqfFkBhN7JH7mQZQOFY8DP5gBxAwNA+833+H0B5s+IQtvQhQP9td8KUJyRA3Esv7l+fJkAkDI8niGQpQHzfb5KGgCxA\u002f8FeSP39L0C6hcHabfQxQB8ps7RDJzRAd+yY8wSfNkAmlgYJImQ5QOxlvPITgDxAMyaEn3z9P0DKv8KlJfRBQH3bNKjyJkRAem5w+qmeRkDyzhjsu2NJQPLk1VShf0xAOfWu+Pv8T0AWXeZx3fNRQPp\u002f\u002fJyhJlRAJsy1Ak+eVkATsMXQVWNZQF1VvLguf1xA7CbfU3v8X0AQWSw\u002flfNhQHQRCpNQJmRAuv9oDPSdZkAbMw2372JpQN+vbx68fmxAObMUsfr7b0Amr5QNTfNxQNeKXYr\u002fJXRAdQOKF5mddkCLUe+eiWJ5QEnt74VJfnxA7ZFPEHr7f0DPWh\u002fdBPOBQPbm9oKuJYRAodEYJD6dhkD9BGyII2KJQE4GPe\u002fWfYxA+rqPcfn6j0BxV8ytvPKRQMAg1nxdJZRAcmQVMuOclkDxRoNzvWGZQMLzVlpkfZxALSbV1Hj6n0CIoJt\u002fdPKhQAoz+3cMJaRANrZ\u002fQYicpkD7EDVgV2GpQFauPcfxfKxAecsfOvj5r0B5MY1SLPKxQMEYZnS7JLRAIsFXUi2ctkCuXIFO8WC5QN4u8TV\u002ffLxAq6JvoXf5v0C\u002fBaEm5PHBQLzMFnJqJMRAfH+dZNKbxkCRI2g+i2DJQAxucaYMfMxAraPECvf4z0DGGNf7m\u002fHRQOdJDXEZJNRAjetQeHeb1kAiX+kvJWDZQLRkvhiae9xAZ8Yednb430D1ZS\u002fSU\u002fHhQCCLSXHII+RAj\u002f9xjRyb5kAMCQUjv1\u002fpQIEL2Iwne+xAsQJ+4\u002fX370DQ6KmpC\u002fHxQDuLy3J3I\u002fRAxbUApMGa9kDNGrsXWV\u002f5QFZbvgK1evxAWFDiUnX3\u002f0C\u002fnEaCw\u002fABQTNFk3UmIwRBYgj9u2aaBkHzjQsO814JQeZMcXpCegxBY6dLxPT2D0EyfQVce\u002fARQd2zoHnVIhRBwvFm1QuaFkH+W\u002fYFjV4ZQfXY8PPPeRxBn\u002f+5N3T2H0GQheY2M\u002fAhQRzS836EIiRBG2w+8LCZJkGXfnv\u002fJl4pQTf4PG9deSxB7VAtrfP1L0FfsekS6+8xQceajIUzIjRBrXGDDFaZNkE+75r6wF05QY+jVezqeDxBHZOlJHP1P0EF\u002fA7wou9BQdcIa43iIURBrvw1KvuYRkGCp1T3Wl1JQbLTOmt4eExBM74invL0T0HqYFbOWu9RQSIXj5aRIVRBegdWSaCYVkHhoKj19FxZQWOB7OsFeFxB\u002fsmkGXL0X0GU27+tEu9hQYHA+KBAIWRBRozjaUWYZkEH1Zb1jlxpQValam6Td2xBYK4rl\u002fHzb0FpZ0uOyu5xQev\u002fp6zvIHRBR4Xei+qXdkF0PR\u002f3KFx5QW84tfIgd3xBKGO3FnHzf0Hb\u002f\u002fhvgu6BQTnQnLmeIIRB2exGr4+XhkG100H6wluJQWQzzHiudoxBXOBHmPDyj0FSoMhSOu6RQU0s18dNIJRBMr0c1DSXlkFLkf7+XFuZQeiOrwA8dpxBuh3dG3Dyn0FdRLo28u2hQQoPV9f8H6RBlfBf+tmWpkHhb1UF91qpQd9DX4rJdaxBRxN3oe\u002fxr0E8580bqu2xQVNzHOirH7RBQ4EQIn+WtkH4aEYNkVq5QQBL2xVXdbxB07gVKW\u002fxv0GShAMCYu3BQfNTJ\u002fpaH8RBgGkuSySWxkEddtEWK1rJQQ2dI6PkdMxBQQa5su7wz0G+F1vpGe3RQfyrdw0KH9RBc6O5dcmV1kHhkPYhxVnZQc0yODJydNxBc\u002fNgPm7w30EynNTR0ezhQTp2DSK5HuRBlSmyoW6V5kG0srUuX1npQQQFGcP\u002fc+xBSngNzO3v70FfDXC7iezxQZCt6DdoHvRBDvYXzxOV9kFg1Q49+Vj5QVYMxlWNc\u002fxBqoy+W23v\u002f0G3Zi2mQewBQuJMCU8XHgRCIQPr\u002fbiUBkJY8gFNk1gJQspBP+oacwxCUSh07ezuD0KtowyS+esRQhJPb2fGHRRCEUsrLl6UFkIpA49eLVgZQgaehICochxCaUMugWzuH0Kevw1\u002fseshQgSvGoF1HSRCIcjYXwOUJkJkAbZxx1cpQs4Zlhg2cixCs9XsFuztL0IltjBtaesxQptnC5wkHTRClXTzkqiTNkKZ5naGYVc5Quetc7LDcTxCENevrmvtP0KhgnVcIetBQqVzQbjTHERCsEp7x02TRkJVrNGc+1ZJQhhTHU5RcUxCZD93SOvsT0KDINxM2epRQjLOvNWCHFRCm0Rw\u002ffKSVkIqTMa0lVZZQicCk+vecFxCkgZD5GrsX0I\u002fi2Q+kephQhFyffQxHGRCzlzSNJiSZkKKv1TOL1ZpQtiz1IpscGxCfSQTgurrb0JGvg4xSepxQiNagxThG3RCc42hbT2SdkI\u002fAH3pyVV5QtNg4iv6b3xCCZHnIWrrf0ILtdokAeqBQk6BzjWQG4RCzdDdp+KRhkK7Bz8GZFWJQh0CvM6Hb4xC9EPAw+nqj0ICa8gZuemRQnXiXlg\u002fG5RCICGH44eRlkKQz5ok\u002flSZQl2QYXMVb5xCbTWdZ2nqn0KH29cPcemhQn14NHzuGqRCsHidIC2RpkJMUZBEmFSpQlkE0xmjbqxCMV1+Denpr0I4AgkHKemxQjI+T6GdGrRCwdEgX9KQtkKAhh9mMlS5QthWEMIwbrxCJrNjtWjpv0Jy2lv\u002f4OjBQqYur8dMGsRCfSYRn3eQxkK9aEiJzFPJQp+AGWy+bcxCLy9NX+joz0KoX9D4mOjRQqhEVO\u002f7GdRCXXFu4ByQ1kJ18QquZlPZQnd67hdMbdxCMMk6C2jo30JOjWbzUOjhQhx7PhirGeRCiqw4I8KP5kJ0GmfUAFPpQgQ9j8XZbOxCD3ksuefn70LXXh7vCOjxQuXMbUJaGfRCSdJvZ2eP9kIu3Vz8mlL5QlDB+3RnbPxCiTYiaWfn\u002f0K1z\u002ffrwOcBQ+k04m0JGQRD39wTrQyPBkMyM+wlNVIJQwAANCb1awxD"},"y":{"dtype":"f8","bdata":"5p0\u002fM09QozwgnHPfbCGkPAAAAAAAAAAA3tPcLo\u002fxtTwSwCi54jXBPAIm9qRtBbg8WGMxVGMruTwasdUpiGWqPFPWOOINtas8nJsLeTUbvTwFI85BUJmuPD8JsNOQJLg86qBBtq4P0zwC2aQALMXKPAmLgbSRNsw8EuurtCXVwzw02DIE\u002fSbaPFjZXpFmj9A8P5UJS9sG4DyAFsrU1Z64PFuZSPcZgtM8jpf2LQ8u0Tz3CvzDysrVPFCugQ2juL48fji\u002fom9tzDy9R5u2bVTzPN+aaLYoIfo8QnprB1jZzDzMGoITNlrUPN08w3wnKgE9ZtNLYpskDD3iItw++NoCPQokED6ivvw8ytl1ZFANuzx\u002fYboGIhD5PHHeb1vf9PI8RtQ+upMa3DyMxqR2t8YJPRhnR2MFxNg8MWy\u002f8jzNFj34zjqvYE6+PKV+c6KEERY9ZS79kgBgBz3KjusCYQLYPCSlsvrgZw09sgn159qtET1wYcHtePIhPZPzXtVxyBQ9fbZCxSrzMD2Cr9K3\u002f940PahxvShF1CU9hVBqtkZ8ND06BOwrcCrkPC+sTomZa0E9Nq6d7bg6Kz1q3Zya52MgPVScd6g2ckA9BUkMNhdRQj1rKVvxfENCPdJUgtba0jQ9R8y5p3z\u002f3zzXDKOxtGtMPVFCSaVKOlU965DrXJsQJD3Ut7ZoPwE7PXLKpTW+DjE9tm9HY0rHUj02c8t\u002ft7hXPX68br5nRFM9SS0Lhr9oVj1vddJHMA4sPQWm6Rcoblg9SkCJ+yKyZz2k6ZGBYplkPRU66VqB2FU9U5gPWroxYj3wO0\u002fzjuFzPWVaxtK2n2k9KneqizmUWT1TTZ6UAx99Pd3Nq23A+mI9DVn1jqYmQj0PgApl17crPW7NJeeAk4E9ujuk7Xu3hz3VLw+APhtNPQm8KquPVmE9nZAaxvtTJz0+l3+BgfM4PeLWkZrAYmc9sVYmhtIhkj3Wv0VxEUJ6PRnBV9qMmo499AZWHh6ZjT28MUmH7F6bPaO+qgEo+ZA9fmx5i4L1kT1CQ9idbpmwPeQDOShUsZA9f70PShwMlT23GQh1YAyyPd1C4x09WJA9+q304cv0qz32oByyug+9PUkACS6lIr49hDqWfyQMkj3QAGjTv2LBPW0\u002fQP2WdKU9Sb4WFSDntz3r5BeNnf\u002fKPQ8G4BQIFjY9BNFAsXiCtz1qZK1maC\u002fePbEs1hz\u002fNc49a74dnzXM3T2ON96JfqXbPblAwwt6usU9qDjNr5FBuT1g7D+J1GXaPYfDU8PF2r89IOZhHvQqqD2EBX2e2I\u002fPPWMm9Uim5dk9k3eToZyu0j1MjQgdsv73PUFwLmHqkOk94MYWkIYu6D2umTUzbGfWPbeZ2DT50fg9HoEsVxMx8z3nWZc3zGbwPZu5ATHDofY9GF4iX3R0\u002fj0xsVWX6GLgPd4Is0lpTBQ+FjiCT6D5DD4l7JgVKdLuPQ6Qj8iE18w9vgkxLFiLIT65gpJDaqsRPpq4F+fwZQQ+ROTy7wrJEz6xgQ+cPBsTPibc5aZPPvw9brXgwNwSID4cczBMds0iPgB3ZZv5OTs+F9jFGJsb\u002fz3sUEt7ZMcwPpo6CcxTwgc+y1RH5GoNQj6JS3SpR5Q8PsSAhfDD5Dg+qabFRynO6z1PA31EbCv8Pd5FUXwFACY+RqAXsk8FRz4rc8mP8RBFPhVXAsNNQhA+L13I2R2oSD51Eaf2\u002fdQ\u002fPvLFg3xbu1M+BbU0JFdhRT4dfFEHj8g5Pl8fI59DKyw+soHk6JoXUT4jFrOtaSdhPmkrNKGTrFI+kO70by33Hz6NSvNJKnBwPrfRNfFKoho++\u002f2E+iVebz5xblH8hLlzPuORgfg14HA+s+7oZPxaKD5fq2MRXqtdPlPEJjYkqm8+1fKj18XfPD47XpnQOWx7PvF4Z8h7imA++lwIrDAlhD4BVVKt1EpZPk7TiOyXU5s+enck1n2rhT6jGmnQHKKYPv8NxqeIQaM+0or4T56Mkj5FUCkM\u002fLeBPnEfTPJMvYs++OYf3Xuhfz7\u002fz\u002fJBpvNwPndVR201qog+\u002fE5sPHICcT5v5pVjYLGoPtB6bEMl45I+KEF0bqlDoj4DU4ujsyF3PpmD+dN7dpE+7OpTsxjDnj4xVX3Zav21PgGMyMIeaqw+f6AIitlLmD52i4ksk\u002ffGPh5+yMRn1LU+y37B90dOuD5228eqMYTBPhfoMQmpL5k+o70oAm0D2z6CRw0hKXHZPgmBgXmoqqM+4b+5Tdr41T4wBkXbgoHXPhfT2lmPIMk+pONRMkHJwz71pLUnVCLJPpAjZVgnb+M++ecaRrmN2z5UTBM6YRXdPigw1W+HGvM+ptbtIjQp7D7o99Tmgfn9PiB43U7rua4+2jSnhCCJ4j4etJ0i30+2PvuWHYay7uQ+aC3K4EyO9T7GxZxwufDxPmzdzSBZ8AE\u002fiosrqoo73T6S\u002fUBqXuACP4sKEl\u002fG1B0\u002fYwinZNUbHT9OiDF2URUHPx4+WotrVho\u002f3kr50dsRGT\u002fYdmp9OCDuPkGC3XL0qPo+TeEks6+a9T7jom2IAzQHPxOo5b413f8+cOHHEVnt3j4L2iXtSrEtPyLNBjKGaj0\u002fdr3ENL+YJj\u002fZBnmUSv8yPy\u002fJvLK2NCA\u002fERY9Elws8D4quD8bzPoyP4Wq8BfDpyQ\u002flGzdn\u002fPRQj8NvKOo5EEdP92E8njbm0U\u002fXegLivR7ND+2fSwh6vstPwX2BSt6J0M\u002fuqafXnOjLj+yCsVS7fItPy8eApCEPyg\u002fnpkctUnYVT+YPE8FVNNjP5agBPrBOBk\u002f+MgKW7arZj8aJ7uI4h1OP0my5h5K4Vg\u002fjXDhwJDnZD+VqRyCYvAlPx9Gm2GVC30\u002fxHv5H3iVYD9QlhczH4N9P7y8twoZJTA\u002fnXEpI\u002fSBcD8KSH8xcqF1P1jRa+kGpmk\u002f5nVvHwwsZz8G3UaopRpMP4V9+i6E31c\u002fSsNrtswbVz89d\u002f4U17WAP5L0B\u002f7ps5M\u002f6oLNfYQUYD9FZGqPYIGRP9bF0qFfKjQ\u002fKeLjzBHUnT9CpKATAJiSP3p6XyW6l6Q\u002fX\u002fu231+sZz\u002fMJujfcBdKP8XVt0vC3VY\u002fETGjqNEcWD+E3gfW3aStP3Bggd+ww5M\u002fIi\u002fwBwMDvD8H\u002fy9xG825Pyt2lw2WLzg\u002fGstOidYQvj+eI3MZ26GwP0jLPMYyM4M\u002fZJDLGmBbqT9sNBR7Sae8P\u002fh7IrAFysY\u002f"},"type":"scatter"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"},"margin":{"b":0,"l":0,"r":0,"t":30}}},"shapes":[{"line":{"color":"gray","dash":"dash"},"type":"line","x0":0,"x1":1,"xref":"x domain","y0":2.220446049250313e-16,"y1":2.220446049250313e-16,"yref":"y"}],"annotations":[{"showarrow":false,"text":"\u03b5_mach","x":1,"xanchor":"right","xref":"x domain","y":2.220446049250313e-16,"yanchor":"bottom","yref":"y"}],"xaxis":{"title":{"text":"x"},"type":"log"},"yaxis":{"title":{"text":"Relative error"},"type":"log"},"font":{"color":"#ffffff"},"title":{"text":"Relative Error \u2014 Naive vs Stable"},"height":380,"plot_bgcolor":"rgba(0,0,0,0)","paper_bgcolor":"rgba(0,0,0,0)"},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('07c5a809-9d17-4150-b657-6bd30f66e314');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+<p>Relative error between naive and stable formulas</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="associativity-failure" class="level2">
+<h2 class="anchored" data-anchor-id="associativity-failure">Associativity Failure</h2>
+<p>In exact arithmetic, addition is associative:</p>
+<p><span class="math display">\[(a + b) + c = a + (b + c)\]</span></p>
+<p>In floating point arithmetic, <strong>this is not always true</strong>:</p>
+<div id="2155e7a0" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="fl">1e16</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="op">-</span><span class="fl">1e16</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"(a + b) + c = </span><span class="sc">{</span>(a <span class="op">+</span> b) <span class="op">+</span> c<span class="sc">}</span><span class="ss">"</span>)   <span class="co"># correct: 1.0</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"a + (b + c) = </span><span class="sc">{</span>a <span class="op">+</span> (b <span class="op">+</span> c)<span class="sc">}</span><span class="ss">"</span>)   <span class="co"># wrong: 0.0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(a + b) + c = 1.0
+a + (b + c) = 0.0</code></pre>
+</div>
+</div>
+<p><strong>Why?</strong> When <span class="math inline">\(b + c\)</span> is computed first, <span class="math inline">\(c = 1.0\)</span> is lost because it is much smaller than <span class="math inline">\(b = -10^{16}\)</span>, falling below the precision threshold.</p>
+<hr>
+</section>
+<section id="golden-rules-of-floating-point" class="level2">
+<h2 class="anchored" data-anchor-id="golden-rules-of-floating-point">Golden Rules of Floating Point</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Rules to avoid numerical disasters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Never compare floats with <code>==</code></strong> — use <code>abs(a - b) &lt; tolerance</code></li>
+<li><strong>Avoid subtracting nearly equal numbers</strong> — reformulate algebraically</li>
+<li><strong>Order operations carefully</strong> — add small numbers before large ones</li>
+<li><strong>Know your machine epsilon</strong> — errors below <span class="math inline">\(\epsilon_{mach}\)</span> are unavoidable</li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="conclusions" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
+<p>Floating point arithmetic is not exact — it is a careful approximation that works extremely well when used correctly. The key takeaways are:</p>
+<ul>
+<li>Every floating point number carries a relative error of at most <span class="math inline">\(\frac{\epsilon_{mach}}{2}\)</span></li>
+<li>Catastrophic cancellation can amplify errors dramatically</li>
+<li>The order of operations matters in floating point</li>
+<li>Numerical stability is not automatic — it must be designed into algorithms</li>
+</ul>
+<p>These ideas will appear repeatedly throughout the course, especially when analyzing the accuracy of root finding and integration methods.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

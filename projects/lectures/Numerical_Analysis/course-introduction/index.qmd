@@ -1,0 +1,116 @@
+---
+title: "Introduction to the Course"
+description: "Welcome, objectives, and how to navigate this course"
+date: 2025-01-01
+categories: [numerical-analysis]
+image: preview.png
+---
+
+## Welcome
+
+It is a pleasure to share with you this course that aims to cover the most fundamental methods of Numerical Analysis. You will not only learn the mathematical background of all algorithms and tools, but you will also apply interesting problems in physics and engineering.  
+
+The methods presented are implemented in Python. Feel free to experiment and play with code! 
+
+---
+
+## Recommended background
+
+To take the most of this course, it is strongly recommended, but not mandatory you are familiar with the following courses.
+
+- **Calculus and Mathematical Analysis** — derivatives, integrals, Taylor series
+- **Linear Algebra** — matrices, vectors, systems of equations
+- **Python basics** — loops, functions, NumPy arrays
+
+If you need a refresher on any of these, don't worry — the relevant math
+is always introduced before it's needed.
+
+---
+
+## Course Structure
+
+The course is organized into four main units:
+
+::: {.grid}
+
+::: {.g-col-6}
+**Unit 1 — Root Finding**
+
+- Searching Method
+- Bisection Method
+- Newton-Raphson *(coming soon)*
+- Secant Method *(coming soon)*
+- Fixed Point Method *(coming soon)*
+- Regula-Falsi Method *(coming soon)*
+:::
+
+::: {.g-col-6}
+**Unit 2 — Interpolation** *(coming soon)*
+
+Fitting curves through data points
+
+- Lagrange Interpolation
+- Newton's Divided Differences
+- Spline Interpolation
+:::
+
+::: {.g-col-6}
+**Unit 3 — Numerical Integration** *(coming soon)*
+
+Approximating definite integrals
+
+- Trapezoidal Rule
+- Simpson's Rule
+- Gaussian Quadrature
+:::
+
+::: {.g-col-6}
+**Unit 4 — Differential Equations** *(coming soon)*
+
+Solving ODEs numerically
+
+- Euler Method
+- Runge-Kutta Methods
+:::
+
+:::
+
+---
+
+## How to use this course
+
+Almost each lecture follows the same structure:
+```
+Overview        → Big picture idea
+Theory          → Mathematical foundation with proofs
+Algorithm       → Step-by-step procedure
+Implementation  → Python code
+Visualization   → Interactive plots
+Conclusions     → Key takeaways
+```
+
+The code is always hidden by default — click **"See implementation"**
+to expand it. Try changing the parameters and see what happens!
+
+---
+
+## A note on errors
+
+Every numerical method introduces some form of error. Throughout this course
+we always ask three questions:
+
+1. **How accurate is this?** — What is the error bound?
+2. **How fast does it converge?** — What is the convergence order?
+3. **When does it fail?** — What are the limitations?
+
+These questions are just as important as the method itself.
+
+## Recommend literature
+
+...
+
+Hope you enjoy this mathematical journey!
+
+**Gabriel Velázquez**
+
+*Undergraduate Physics Student*
